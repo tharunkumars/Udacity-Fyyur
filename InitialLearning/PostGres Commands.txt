@@ -1,0 +1,26 @@
+psql <dbname> goes to the databases
+
+net start postgresql-x64-16
+
+net stop postgresql-x64-16
+
+postgres commands
+
+database level 
+
+\l to list the databases
+
+createdb
+dropdb
+
+\dt to see the table details
+
+\d to find the details of specific table
+
+\c <dbname> switch databases
+
+\q Quit psql and return to Terminal
+
+\? list of all commands available
+
+psql <databasename> [<username>]

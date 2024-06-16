@@ -1,0 +1,283 @@
+Why use SQLAlchemy ?
+
+Provides a layer of abstraction over regular DBAPIs like psycopg2.
+
+Not scalable in all sense like functionality.
+
+migrating to different DB becomes a challenge
+
+OOPS Language users can use thier own language for constructing the Objects for DB.
+
+Can be Stubbed and tested .
+
+Can use one DB for test (SQLLite) and different one for prod (PostGres)
+
+Takeaways
+Without SQLAlchemy, we'd only use a DBAPI to establish connections and execute SQL statements. 
+Simple, but not scalable as complexity grows.
+SQLAlchemy offers several layers of abstraction and convenient tools for interacting with a database.
+
+SQLAlchemy vs psycopg2
+SQLAlchemy generates SQL statements
+psycopg2 directly sends SQL statements to the database.
+SQLAlchemy depends on psycopg2 or other database drivers to communicate with the database, under the hood.
+
+SQLALchemy lets you traverse through all 3 layers of abstraction to interact with your database.
+Can stay on the ORM level
+Can dive into database operations to run customized SQL code specific to the database, on the Expressions level.
+Can write raw SQL to execute, when needed, on the Engine level.
+(Can more simply use psycopg2 in this case)
+
+Best Practices
+
+Keep your code Pythonic. Work in classes and objects as much as possible.
+Makes switching to a different backend easy in the future.
+Avoid writing raw SQL until absolutely necessary.
+
+Layers of SQLAlchemy
+    DBAPI
+    The Dialect
+    The Connection Pool
+    The Engine
+    SQL Expressions
+    SQLAlchemy ORM (optional)
+
+The Dialect :
+    
+    this helps us to forget the DB and focus on the OOPS language.
+    Can use one DB for test (SQLLite) and different one for prod (PostGres)
+    migrating to different DB becomes a challenge
+
+Connection pool :
+
+    With a connection pool, the opening and closing of connections and which connection you are using when
+     you're executing statements within a session are completely abstracted away from you.
+
+    As a result of having a connection pool:
+
+    1.Connections are easily reused after they are started. 
+        This avoids the problem of continually opening and closing connections every time we want
+        to make data changes to our database.
+    2.A connection pool also easily handles dropped connections for us, 
+        for example, when we have network issues.
+    3.It also helps us avoid doing very many small calls to the database when we're continually 
+        assigning changes to the database, which can be very slow.
+
+The Engine
+    1 of 3 main layers for how you may choose to interact with the database.
+    Is the lowest level layer of interacting with the database, 
+        and is much like using the DBAPI directly. 
+    Very similar to using psycopg2, managing a connection directly.
+    Moreover,The Engine in SQLAlchemy refers to both itself, the Dialect and the Connection Pool,
+        which all work together to interface with our database.
+    A connection pool gets automatically created when we create an SQLAlchemy engine.
+
+SQL Expressions
+    Instead of sending raw SQL (using the Engine), 
+    we can compose python objects to compose SQL expressions, instead.
+    SQL Expressions still involves using and knowing SQL to interact with the database.
+
+SQLAlchemy ORM
+    Lets you compose SQL expressions by mapping python classes of objects to tables in the database
+    Is the highest layer of abstraction in SQLALchemy.
+    Wraps the SQL Expressions and Engine to work together to interact with the database
+    Will be used in this course, so we can know how to use ORM libraries in general.
+    Moreover, SQLAlchemy is split into two libraries:
+        SQLAlchemy Core
+        SQLAlchemy ORM (Object Relational Mapping library). 
+            SQLALchemy ORM is offered as an optional library, so you don't have to use the ORM in order 
+            to use the rest of SQLAlchemy.
+        The ORM uses the Core library inside
+        The ORM lets you map from the database schema to the application's Python objects
+        The ORM persists objects into corresponding database tables
+
+
+Classes and Table Mapping
+
+  Tables mapped to classes
+  Table records mapped to class objects, 
+  table columns mapped to the attributes within that class.
+
+SQLAlchemy data types 
+  SQLAlchemy has its own data types that we should become familiar with. 
+  In SQLAlchemy, there is a one-to-one parity between an SQLAlchemy datatype 
+  and the data type that would be understandable in the semantics of the 
+  particular database system that you're linking your SQLAlchemy engine to.
+
+    db.integer, that's the integer type for the database system that we're using.
+    db.string, where you can optionally pass in a number that represents the maximum length of that string should be. For Postgress in particular, we're able to specify a variable character string, so we can omit the size variable, so that setting db.string with nothing in it, specifies a varchar data fields.
+    db.text for longer text
+    db.DateTime for date time objects
+    floats
+    Booleans
+    PickleTypes
+    large binaries for storing large binary data or pickled Python objects.
+
+    We generally don't need to memorize these SQLAlchemy datatypes, 
+    but keep this in mind as a reference, as you're figuring out how to define 
+    your models in your application.
+
+Takeaways
+db.Model.query offers us the Query object. 
+    The Query object lets us generate SELECT statements that let us query and return 
+    slices of data from our database.
+Query allows method chaining. 
+    You can chain query methods to another (indefinitely), 
+    getting back more query objects, until you chain it with a terminal method 
+    that returns a non-query object like count(), all(), first(), delete(), etc.
+The Query object can be accessed on a model using either:
+    MyModel.query directly on the model, 
+    OR
+    db.session.query(MyModel) using db.session.query instead.
+
+MyModel.query.all()
+     same as doing a SELECT *, fetching all records from the model's table. 
+     Returns a list of objects.
+MyModel.query.first()
+     Fetches just the first result. 
+     Returns either None or an object if found.
+MyModel.query.filter_by(my_table_attribute='some value')
+     Similar to doing a SELECT * from ... WHERE SQL statement 
+     for filtering data by named attributes.
+MyModel.query.filter(MyOtherModel.some_attr='some value')
+OrderItem.query.filter(Product.id=3)
+    Similar to filter_by, but instead, you specify attributes on a given Model. 
+    It is more flexible than using filter_by itself, and is especially useful 
+    when querying from a joined table where you want to filter by attributes 
+    that span across multiple models.
+MyModel.order_by(MyModel.created_at)
+MyModel.order_by(db.desc(MyModel.created_at))
+Order.query.limit(100).all()    
+    limit(max_num_rows) limits the number of returned records from the query. ala LIMIT in SQL.
+query.count()
+    count of items retrieved
+Get object by ID
+    model_id = 3
+    MyModel.query.get(model_id)
+    Returns the object as a result of querying the model by its primary key.
+Bulk Deletes
+    query = Task.query.filter_by(category='Archived')
+    query.delete()
+    delete() does a bulk delete operation that deletes every record matching the given query.
+Joined Queries
+    Driver.query.join('vehicles')
+    Query has a method join(<table_name>) for joining one model to another table.
+    here it joins Driver table with Vehicles tables.
+
+
+Object Life Cycle
+    Within a session, we create transactions every time we want to commit work to the database.
+    Proposed changes are not immediately committed to the database and instead, 
+    go through stages to allow for undos.
+    The ability to undo is allowed via db.session.rollback()
+
+Stages:
+    Transient: an object exists, it was defined.but not attached to a session or database (yet).
+    Pending: Some type of action has occurred but we have not yet decided to make it permanent yet. 
+            An object was attached to a session. 
+            "Undo" becomes available via db.session.rollback(). 
+            This means we can still clear any work that has been done so far. 
+            An object stays in this state until a flush happens!
+    Flushed: Translating actions(pending changes) into SQL commands that are ready to be committed. 
+            Nothing happens in the actual database yet. 
+            The only thing that can do that is 'commit'
+    Committed: manually called for all pending changes to 
+            persist to the database permanently.
+
+A flush takes pending changes and translates them into commands ready to be committed. 
+It occurs: when you call
+    Query. Or
+    db.session.commit()
+
+A commit leads to persisted changes on the database + 
+lets the db.session start with a new transaction.
+
+When a statement has been flushed already, 
+SQLAlchemy knows not to do the work again of translating actions to SQL statements.
+
+SQLAlchemy is designed such that Commit will automatically flush pending changes. 
+that is it creates the sql statements before it is being executed in the DB.
+
+Migrations Takeaways::
+
+    Migrations are changes to the database data and schema that are saved into a file. 
+    This file can be applied to rollback or apply those changes.
+
+    Migrations deal with how we manage modifications to our data schema, over time.
+    Mistakes to our database schema are very expensive to make. 
+    The entire app can go down, so we want to quickly roll back changes, and
+    test changes before we make them
+
+    A Migration is a file that keeps track of changes to our database schema (structure of our database).
+    Offers version control on our schema.
+    Upgrades and rollbacks
+        Migrations stack together in order to form the latest version of our database schema
+    We can upgrade our database schema by applying migrations
+    We can roll back our database schema to a former version by reverting migrations that we applied.
+
+    Migrations must ::
+
+    Encapsulate a set of changes to our database schema, made over time.
+    are uniquely named
+    are usually stored as local files in our project repo, e.g. a migrations/ folder
+    There should be a 1-1 mapping between the changes made to our database,
+     and the migration files that exist in our migrations/ folder.
+    Our migrations files set up the tables for our database.
+    All changes made to our DB should exist physically as part of migration files in our repository.
+
+    Migration command-line scripts::
+        There are generally 3 scripts needed, for
+
+        migrate: creating a migration script template to fill out; generating a migration file based
+             on changes to be made
+        upgrade: applying migrations that hadn't been applied yet ("upgrading" our database)
+        downgrade: rolling back applied migrations that were problematic ("downgrading" our database)
+
+    Migration library for Flask + SQLAlchemy::
+        Flask-Migrate is our library for migrating changes using SQLAlchemy.
+         It uses a library called Alembic underneath the hood.
+
+    Flask-Migrate & Flask-Script :: 
+        Flask-Migrate (flask_migrate) is our migration manager for migrating SQLALchemy-based 
+        database changes
+        Flask-Script (flask_script) lets us run migration scripts we defined, from the terminal
+
+    Steps to get migrations going ::
+        Initialize the migration repository structure for storing migrations
+        Create a migration script (using Flask-Migrate)
+        (Manually) Run the migration script (using Flask-Script)
+
+    Without migrations:
+
+        We do heavy-handed work, creating and recreating the same tables in our database even for minor changes
+        We can lose existing data in older tables we dropped
+
+    With migrations:
+
+        Auto-detects changes from the old version & new version of the SQLAlchemy models
+        Creates a migration script that resolves differences between the old & new versions
+        Gives fine-grain control to change existing tables
+
+    This is much better, because
+
+        We can keep existing schema structures, only modifying what needs to be modified
+        We can keep existing data
+        We isolate units of change in migration scripts that we can roll back to a “safe” db state 
+    Glossary
+        Migrations are code-based strategies that allow you to manipulate the schema or data in a database after it has already been created and has data in it. They are useful for recording changes, as well as providing a way to "rollback" changes. There can be several migration files "stacked" on top of one another in order.
+        In a DBMS, a database schema helps to define the different tables and fields in each table. It also describes the relationships between different tables.
+        We can upgrade our database schema by applying migrations. This applies as schema changes permanently
+        We can roll back our database schema to a former version by reverting migrations that we applied
+    
+    class Drive (db.model):
+        __tablename__ = 'drivers'
+        id = db.Column(db.Integer, primary_key=true)
+        ...
+        vehicles = (db.relationship'Vehicle',backref='drivers,lazy=true)
+
+    class Vehicle (db.model):
+        __tablename__ = 'vehicles'
+        id = db.Column(db.Integer, primary_key=true)
+        make = db.Column(db.String(), nullable=False)
+        ...
+        driver_id = db.Column(db.Integer, db.ForeignKey('drivers.id'),nullable=False)
