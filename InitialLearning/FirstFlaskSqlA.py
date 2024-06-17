@@ -83,6 +83,17 @@ def index():
     db.session.commit()
     Person.query()
     """
+    Venue1 = Venue(1,"The Musical Hop","San Francisco","CA","AddressVenue1","PhoneVenue1",
+                    "facebook_link","image_link","website_link",True,"Venue1Talent"
+                    )
+    Venue2 = Venue(2,"The Dueling Pianos Bar","New York","NY","AddressVenue2","PhoneVenue2",
+                    "facebook_linkV2","image_linkV2","website_linkV2",True,"Venue2Talent"
+                    )
+    Venue3 = Venue(3,"Park Square Live Music & Coffee","San Francisco","CA","AddressVenue3","PhoneVenue3",
+                    "facebook_linkV3","image_linkV3","website_linkV3",True,"Venue3Talent"
+                    )
+    db.session.add_all([Venue1],[Venue2],[Venue3])
+
 
 if __name__ == '__main__':
    app.run(host="127.0.0.1" )

@@ -48,6 +48,11 @@ class Venue(db.Model):
     #Update from Tharun to include additional fields missing from original Code  
     lookingForTalent = db.Column(db.Boolean, default=False)
     descForTalent = db.Column(db.String(500))
+    # Setting BiDirectional RelationShip between Venue table (considered as Parent)
+    # and Artist Table (considered as Child)
+    # Shows being created as Association table
+    artists = db.relationship('Artist', secondary='Shows',
+      backref=db.backref('Venue', lazy=True))
 
 # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
@@ -58,10 +63,12 @@ class Artist(db.Model):
     name = db.Column(db.String)
     city = db.Column(db.String(120))
     state = db.Column(db.String(120))
+    address = db.Column(db.String(120))
     phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
+    image_link = db.Column(db.String(500))
+    website_link = db.Column(db.String(500)) 
+    genres = db.Column(db.String(120))
     #Update from Tharun to include additional fields missing from original Code
     lookingForVenue = db.Column(db.Boolean, default=False)
     descForVenue = db.Column(db.String(500))
@@ -71,6 +78,14 @@ class Artist(db.Model):
 
 # TODO Implement Show and Artist models, 
 # and complete all model relationships and properties, as a database migration.
+
+# Implementing a Many2Many relationship and Creating an association table in SQLAlchemy
+    Shows = db.Table('Shows',
+    db.Column('venue_id', db.Integer, db.ForeignKey('Venue.id'), primary_key=True),
+    db.Column('venue_name', db.String),
+    db.Column('artist_id', db.Integer, db.ForeignKey('Artist.id'), primary_key=True),
+    db.Column('artist_name', db.String)
+    )
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -96,6 +111,90 @@ def index():
   # as this will not cause any Change to an existing table
   print(" Inside the main Route ")
   db.create_all()
+
+  #Create object for Venue and adding Values into the table
+  Venue1 = Venue(id = 1,
+                 name= "The Musical Hop",
+                 city = "San Francisco",
+                 state = "CA", 
+                 address = "AddressVenue1 1015 Folsom Street",
+                 phone = "123-123-1234",
+                 facebook_link = "https://www.facebook.com/TheMusicalHop",
+                 image_link = "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
+                 website_link = "https://www.themusicalhop.com",
+                 lookingForTalent = True,
+                 descForTalent = "Venue1Talent"
+                )
+  Venue2 = Venue(id = 2,
+                 name="The Dueling Pianos Bar",
+                 city = "New York",
+                 state = "NY",
+                 address = "AddressVenue2 1024 Folsom Street",
+                 phone = "123-123-1234",
+                 facebook_link =   "https://www.facebook.com/TheDuelingPianosBar",
+                 image_link =    "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
+                 website_link =    "https://www.theDuelingPianosBar.com",
+                 lookingForTalent =    True,
+                 descForTalent = "Venue2Talent"
+                    )
+  Venue3 = Venue(id = 3,
+                 name="Park Square Live Music & Coffee",
+                 city = "San Francisco",
+                 state ="CA",
+                 address = "AddressVenue3 1006 Folsom Street",
+                 phone = "123-123-1234",
+                 facebook_link =    "https://www.facebook.com/ParkSquareLiveMusicCoffee",
+                 image_link =     "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
+                 website_link =      "https://www.theParkSquareLiveMusicCoffee.com",
+                 lookingForTalent =     True,
+                 descForTalent = "Venue3Talent"
+                  )
+  
+  VenueList = [Venue1,Venue2,Venue3]
+  db.session.add_all(VenueList)
+  
+  Artist1 = Artist(id = 1,
+                   name="The Musical Hop",
+                   city = "San Francisco",
+                   state ="CA",
+                   address = "AddressVenue1 1015 Folsom Street",
+                   phone = "123-123-1234",
+                   facebook_link =   "https://www.facebook.com/TheMusicalHop",
+                   image_link =    "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
+                   website_link =   "https://www.themusicalhop.com",
+                   genres =  "Jazz Reggae Swing Classical Folk",
+                   lookingForVenue = True,
+                   descForVenue = "Venue1Talent"
+                    )
+  Artist2 = Artist(id = 2,
+                   name="The Dueling Pianos Bar",
+                   city = "New York",
+                   state ="NY",
+                   address = "AddressVenue2 1024 Folsom Street",
+                   phone = "123-123-1234",
+                   facebook_link =   "https://www.facebook.com/TheDuelingPianosBar",
+                   image_link =    "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
+                   website_link =   "https://www.theDuelingPianosBar.com",
+                   genres =  "Classical R&B Hip-Hop",
+                   lookingForVenue = True,
+                   descForVenue = "Venue2Talent"
+                    )
+  Artist3 = Artist(id = 3,
+                   name="Park Square Live Music & Coffee",
+                   city = "San Francisco",
+                   state ="CA",
+                   address = "AddressVenue3 1006 Folsom Street",
+                   phone = "123-123-1234",
+                   facebook_link =   "https://www.facebook.com/ParkSquareLiveMusicCoffee",
+                   image_link =    "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
+                   website_link =   "https://www.theParkSquareLiveMusicCoffee.com",
+                   genres =  "RocknRoll Jazz Classical Folk",
+                   lookingForVenue = True,
+                   descForVenue = "Venue3Talent"
+                    )
+  ArtistList = [Artist1,Artist2,Artist3]
+  db.session.add_all(ArtistList)
+
   db.session.commit()
   return render_template('pages/home.html')
 
