@@ -281,3 +281,10 @@ Migrations Takeaways::
         make = db.Column(db.String(), nullable=False)
         ...
         driver_id = db.Column(db.Integer, db.ForeignKey('drivers.id'),nullable=False)
+
+    flask db init: This command initializes migration support for your Flask application. 
+    It creates a migrations folder within your project directory to store migration scripts.
+
+    flask db migrate: This command detects changes in your SQLAlchemy models and 
+    generates a new migration script.
+    You can optionally provide a message describing the migration using the -m flag:

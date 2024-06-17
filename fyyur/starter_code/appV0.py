@@ -6,26 +6,21 @@ import json
 import dateutil.parser
 import babel
 from flask import Flask, render_template, request, Response, flash, redirect, url_for
-from flask_moment import *
-from jinja2.utils import markupsafe
+#from flask_moment import *
+#from jinja2.utils import markupsafe
 from flask_sqlalchemy import SQLAlchemy
-#Update from Tharun
-from flask_migrate import Migrate
 import logging
 from logging import Formatter, FileHandler
-from flask_wtf import *
-from forms import *
+#from flask_wtf import *
+#from forms import *
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
 
 app = Flask(__name__)
-moment = Moment(app)
+#moment = Moment(app)
 app.config.from_object('config')
 db = SQLAlchemy(app)
-
-#Update from Tharun
-migrate = Migrate(app, db)
 
 # TODO: connect to a local postgresql database
 
@@ -35,21 +30,17 @@ migrate = Migrate(app, db)
 
 class Venue(db.Model):
     __tablename__ = 'Venue'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     city = db.Column(db.String(120))
     state = db.Column(db.String(120))
     address = db.Column(db.String(120))
     phone = db.Column(db.String(120))
-    facebook_link = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
-    website_link = db.Column(db.String(500))  
-    #Update from Tharun to include additional fields missing from original Code  
-    lookingForTalent = db.Column(db.Boolean, default=False)
-    descForTalent = db.Column(db.String(500))
+    facebook_link = db.Column(db.String(120))
 
-# TODO: implement any missing fields, as a database migration using Flask-Migrate
+    # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
 class Artist(db.Model):
     __tablename__ = 'Artist'
@@ -62,15 +53,10 @@ class Artist(db.Model):
     genres = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
-    #Update from Tharun to include additional fields missing from original Code
-    lookingForVenue = db.Column(db.Boolean, default=False)
-    descForVenue = db.Column(db.String(500))
 
-# TODO: implement any missing fields, as a database migration using Flask-Migrate
-     # Included in the both the Venue and Artist Models
+    # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
-# TODO Implement Show and Artist models, 
-# and complete all model relationships and properties, as a database migration.
+# TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -92,11 +78,6 @@ app.jinja_env.filters['datetime'] = format_datetime
 
 @app.route('/')
 def index():
-  # Update from Tharun, Leaving the create_all() function as is, 
-  # as this will not cause any Change to an existing table
-  print(" Inside the main Route ")
-  db.create_all()
-  db.session.commit()
   return render_template('pages/home.html')
 
 
