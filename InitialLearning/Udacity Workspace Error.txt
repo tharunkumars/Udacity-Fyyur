@@ -1,0 +1,408 @@
+home root$ net start postgresql-x64-16
+bash: net: command not found
+home root$ psql
+psql: FATAL:  role "root" does not exist
+home root$ Python -V
+bash: Python: command not found
+home root$ pip install SQLAlchemy
+Requirement already satisfied: SQLAlchemy in /opt/conda/lib/python3.6/site-packages (1.1.13)
+home root$ npm init -y
+Wrote to /workspace/home/package.json:
+
+{
+  "name": "home",
+  "version": "1.0.0",
+  "description": "-----",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+
+
+home root$ npm install bootstrap@3
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN home@1.0.0 No repository field.
+
++ bootstrap@3.4.1
+added 1 package from 1 contributor and audited 1 package in 0.588s
+found 0 vulnerabilities
+
+
+
+   ╭────────────────────────────────────────────────────────────────╮
+   │                                                                │
+   │      New major version of npm available! 6.14.16 → 10.8.1      │
+   │   Changelog: https://github.com/npm/cli/releases/tag/v10.8.1   │
+   │               Run npm install -g npm to update!                │
+   │                                                                │
+   ╰────────────────────────────────────────────────────────────────╯
+
+home root$ pip install --upgrade pip
+Collecting pip
+  Downloading https://files.pythonhosted.org/packages/a4/6d/6463d49a933f547439d6b5b98b46af8742cc03ae83543e4d7688c2420f8b/pip-21.3.1-py3-none-any.whl (1.7MB)
+    100% |████████████████████████████████| 1.7MB 15.1MB/s 
+Installing collected packages: pip
+  Found existing installation: pip 18.1
+    Uninstalling pip-18.1:
+      Successfully uninstalled pip-18.1
+Successfully installed pip-21.3.1
+home root$ pip install postgres
+Collecting postgres
+  Downloading postgres-4.0-py2.py3-none-any.whl (21 kB)
+Collecting psycopg2-binary>=2.8
+  Downloading psycopg2-binary-2.9.8.tar.gz (383 kB)
+     |████████████████████████████████| 383 kB 1.3 MB/s            
+  Preparing metadata (setup.py) ... done
+Collecting psycopg2-pool
+  Downloading psycopg2_pool-1.2-py2.py3-none-any.whl (7.3 kB)
+Building wheels for collected packages: psycopg2-binary
+  Building wheel for psycopg2-binary (setup.py) ... error
+  ERROR: Command errored out with exit status 1:
+   command: /opt/conda/bin/python -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-1no51c96/psycopg2-binary_aa8673b403944604b858b0c87b90d584/setup.py'"'"'; __file__='"'"'/tmp/pip-install-1no51c96/psycopg2-binary_aa8673b403944604b858b0c87b90d584/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' bdist_wheel -d /tmp/pip-wheel-iaozrktu
+       cwd: /tmp/pip-install-1no51c96/psycopg2-binary_aa8673b403944604b858b0c87b90d584/
+  Complete output (38 lines):
+  running bdist_wheel
+  running build
+  running build_py
+  creating build
+  creating build/lib.linux-x86_64-3.6
+  creating build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/errorcodes.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/__init__.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/extensions.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/pool.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/sql.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/errors.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/_json.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/_range.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/tz.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/_ipaddress.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/extras.py -> build/lib.linux-x86_64-3.6/psycopg2
+  running build_ext
+  building 'psycopg2._psycopg' extension
+  creating build/temp.linux-x86_64-3.6
+  creating build/temp.linux-x86_64-3.6/psycopg
+  gcc -pthread -Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -fPIC -DPSYCOPG_VERSION=2.9.8 (dt dec pq3 ext lo64) -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=90606 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/opt/conda/include/python3.6m -I. -I/opt/conda/include -I/opt/conda/include/server -I/opt/conda/include -c psycopg/psycopgmodule.c -o build/temp.linux-x86_64-3.6/psycopg/psycopgmodule.o -Wdeclaration-after-statement
+  In file included from psycopg/psycopgmodule.c:28:0:
+  ./psycopg/psycopg.h:36:10: fatal error: libpq-fe.h: No such file or directory
+   #include <libpq-fe.h>
+            ^~~~~~~~~~~~
+  compilation terminated.
+  
+  It appears you are missing some prerequisite to build the package from source.
+  
+  You may install a binary package by installing 'psycopg2-binary' from PyPI.
+  If you want to install psycopg2 from source, please install the packages
+  required for the build and try again.
+  
+  For further information please check the 'doc/src/install.rst' file (also at
+  <https://www.psycopg.org/docs/install.html>).
+  
+  error: command 'gcc' failed with exit status 1
+  ----------------------------------------
+  ERROR: Failed building wheel for psycopg2-binary
+  Running setup.py clean for psycopg2-binary
+Failed to build psycopg2-binary
+Installing collected packages: psycopg2-binary, psycopg2-pool, postgres
+    Running setup.py install for psycopg2-binary ... error
+    ERROR: Command errored out with exit status 1:
+     command: /opt/conda/bin/python -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-1no51c96/psycopg2-binary_aa8673b403944604b858b0c87b90d584/setup.py'"'"'; __file__='"'"'/tmp/pip-install-1no51c96/psycopg2-binary_aa8673b403944604b858b0c87b90d584/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /tmp/pip-record-qwbjr3vb/install-record.txt --single-version-externally-managed --compile --install-headers /opt/conda/include/python3.6m/psycopg2-binary
+         cwd: /tmp/pip-install-1no51c96/psycopg2-binary_aa8673b403944604b858b0c87b90d584/
+    Complete output (38 lines):
+    running install
+    running build
+    running build_py
+    creating build
+    creating build/lib.linux-x86_64-3.6
+    creating build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/errorcodes.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/__init__.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/extensions.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/pool.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/sql.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/errors.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/_json.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/_range.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/tz.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/_ipaddress.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/extras.py -> build/lib.linux-x86_64-3.6/psycopg2
+    running build_ext
+    building 'psycopg2._psycopg' extension
+    creating build/temp.linux-x86_64-3.6
+    creating build/temp.linux-x86_64-3.6/psycopg
+    gcc -pthread -Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -fPIC -DPSYCOPG_VERSION=2.9.8 (dt dec pq3 ext lo64) -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=90606 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/opt/conda/include/python3.6m -I. -I/opt/conda/include -I/opt/conda/include/server -I/opt/conda/include -c psycopg/psycopgmodule.c -o build/temp.linux-x86_64-3.6/psycopg/psycopgmodule.o -Wdeclaration-after-statement
+    In file included from psycopg/psycopgmodule.c:28:0:
+    ./psycopg/psycopg.h:36:10: fatal error: libpq-fe.h: No such file or directory
+     #include <libpq-fe.h>
+              ^~~~~~~~~~~~
+    compilation terminated.
+    
+    It appears you are missing some prerequisite to build the package from source.
+    
+    You may install a binary package by installing 'psycopg2-binary' from PyPI.
+    If you want to install psycopg2 from source, please install the packages
+    required for the build and try again.
+    
+    For further information please check the 'doc/src/install.rst' file (also at
+    <https://www.psycopg.org/docs/install.html>).
+    
+    error: command 'gcc' failed with exit status 1
+    ----------------------------------------
+ERROR: Command errored out with exit status 1: /opt/conda/bin/python -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-1no51c96/psycopg2-binary_aa8673b403944604b858b0c87b90d584/setup.py'"'"'; __file__='"'"'/tmp/pip-install-1no51c96/psycopg2-binary_aa8673b403944604b858b0c87b90d584/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /tmp/pip-record-qwbjr3vb/install-record.txt --single-version-externally-managed --compile --install-headers /opt/conda/include/python3.6m/psycopg2-binary Check the logs for full command output.
+home root$ pip install Flask
+Requirement already satisfied: Flask in /opt/conda/lib/python3.6/site-packages (1.1.1)
+Requirement already satisfied: itsdangerous>=0.24 in /opt/conda/lib/python3.6/site-packages (from Flask) (0.24)
+Requirement already satisfied: Werkzeug>=0.15 in /opt/conda/lib/python3.6/site-packages (from Flask) (2.0.3)
+Requirement already satisfied: click>=5.1 in /opt/conda/lib/python3.6/site-packages (from Flask) (6.7)
+Requirement already satisfied: Jinja2>=2.10.1 in /opt/conda/lib/python3.6/site-packages (from Flask) (3.0.3)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.6/site-packages (from Jinja2>=2.10.1->Flask) (2.0.1)
+Requirement already satisfied: dataclasses in /opt/conda/lib/python3.6/site-packages (from Werkzeug>=0.15->Flask) (0.8)
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+home root$ pip install Flask-Migrate
+Collecting Flask-Migrate
+  Downloading Flask_Migrate-4.0.7-py3-none-any.whl (21 kB)
+  Downloading Flask_Migrate-4.0.6-py3-none-any.whl (21 kB)
+  Downloading Flask_Migrate-4.0.5-py3-none-any.whl (21 kB)
+  Downloading Flask_Migrate-4.0.4-py3-none-any.whl (20 kB)
+  Downloading Flask_Migrate-4.0.3-py3-none-any.whl (20 kB)
+  Downloading Flask_Migrate-4.0.2-py3-none-any.whl (20 kB)
+  Downloading Flask_Migrate-4.0.1-py3-none-any.whl (20 kB)
+Collecting alembic>=0.7
+  Downloading alembic-1.7.7-py3-none-any.whl (210 kB)
+     |████████████████████████████████| 210 kB 2.2 MB/s            
+Requirement already satisfied: Flask>=0.9 in /opt/conda/lib/python3.6/site-packages (from Flask-Migrate) (1.1.1)
+Requirement already satisfied: Flask-SQLAlchemy>=1.0 in /opt/conda/lib/python3.6/site-packages (from Flask-Migrate) (2.4.0)
+Requirement already satisfied: Mako in /opt/conda/lib/python3.6/site-packages/Mako-1.0.7-py3.6.egg (from alembic>=0.7->Flask-Migrate) (1.0.7)
+Collecting SQLAlchemy>=1.3.0
+  Downloading SQLAlchemy-1.4.52-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.6 MB)
+     |████████████████████████████████| 1.6 MB 19.2 MB/s            
+Collecting importlib-metadata
+  Downloading importlib_metadata-4.8.3-py3-none-any.whl (17 kB)
+Collecting importlib-resources
+  Downloading importlib_resources-5.4.0-py3-none-any.whl (28 kB)
+Requirement already satisfied: itsdangerous>=0.24 in /opt/conda/lib/python3.6/site-packages (from Flask>=0.9->Flask-Migrate) (0.24)
+Requirement already satisfied: click>=5.1 in /opt/conda/lib/python3.6/site-packages (from Flask>=0.9->Flask-Migrate) (6.7)
+Requirement already satisfied: Jinja2>=2.10.1 in /opt/conda/lib/python3.6/site-packages (from Flask>=0.9->Flask-Migrate) (3.0.3)
+Requirement already satisfied: Werkzeug>=0.15 in /opt/conda/lib/python3.6/site-packages (from Flask>=0.9->Flask-Migrate) (2.0.3)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/conda/lib/python3.6/site-packages (from Jinja2>=2.10.1->Flask>=0.9->Flask-Migrate) (2.0.1)
+Requirement already satisfied: greenlet!=0.4.17 in /opt/conda/lib/python3.6/site-packages (from SQLAlchemy>=1.3.0->alembic>=0.7->Flask-Migrate) (0.4.12)
+Requirement already satisfied: dataclasses in /opt/conda/lib/python3.6/site-packages (from Werkzeug>=0.15->Flask>=0.9->Flask-Migrate) (0.8)
+Collecting zipp>=0.5
+  Downloading zipp-3.6.0-py3-none-any.whl (5.3 kB)
+Collecting typing-extensions>=3.6.4
+  Downloading typing_extensions-4.1.1-py3-none-any.whl (26 kB)
+Installing collected packages: zipp, typing-extensions, importlib-metadata, SQLAlchemy, importlib-resources, alembic, Flask-Migrate
+  Attempting uninstall: SQLAlchemy
+    Found existing installation: SQLAlchemy 1.1.13
+    Uninstalling SQLAlchemy-1.1.13:
+      Successfully uninstalled SQLAlchemy-1.1.13
+Successfully installed Flask-Migrate-4.0.1 SQLAlchemy-1.4.52 alembic-1.7.7 importlib-metadata-4.8.3 importlib-resources-5.4.0 typing-extensions-4.1.1 zipp-3.6.0
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+home root$ pip install postgres
+Collecting postgres
+  Using cached postgres-4.0-py2.py3-none-any.whl (21 kB)
+Collecting psycopg2-binary>=2.8
+  Using cached psycopg2-binary-2.9.8.tar.gz (383 kB)
+  Preparing metadata (setup.py) ... done
+Collecting psycopg2-pool
+  Using cached psycopg2_pool-1.2-py2.py3-none-any.whl (7.3 kB)
+Building wheels for collected packages: psycopg2-binary
+  Building wheel for psycopg2-binary (setup.py) ... error
+  ERROR: Command errored out with exit status 1:
+   command: /opt/conda/bin/python -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-_j_g2j_z/psycopg2-binary_432ac70e03c74c78879cac728a2846fb/setup.py'"'"'; __file__='"'"'/tmp/pip-install-_j_g2j_z/psycopg2-binary_432ac70e03c74c78879cac728a2846fb/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' bdist_wheel -d /tmp/pip-wheel-xjxy8pi8
+       cwd: /tmp/pip-install-_j_g2j_z/psycopg2-binary_432ac70e03c74c78879cac728a2846fb/
+  Complete output (38 lines):
+  running bdist_wheel
+  running build
+  running build_py
+  creating build
+  creating build/lib.linux-x86_64-3.6
+  creating build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/errorcodes.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/__init__.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/extensions.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/pool.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/sql.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/errors.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/_json.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/_range.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/tz.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/_ipaddress.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/extras.py -> build/lib.linux-x86_64-3.6/psycopg2
+  running build_ext
+  building 'psycopg2._psycopg' extension
+  creating build/temp.linux-x86_64-3.6
+  creating build/temp.linux-x86_64-3.6/psycopg
+  gcc -pthread -Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -fPIC -DPSYCOPG_VERSION=2.9.8 (dt dec pq3 ext lo64) -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=90606 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/opt/conda/include/python3.6m -I. -I/opt/conda/include -I/opt/conda/include/server -I/opt/conda/include -c psycopg/psycopgmodule.c -o build/temp.linux-x86_64-3.6/psycopg/psycopgmodule.o -Wdeclaration-after-statement
+  In file included from psycopg/psycopgmodule.c:28:0:
+  ./psycopg/psycopg.h:36:10: fatal error: libpq-fe.h: No such file or directory
+   #include <libpq-fe.h>
+            ^~~~~~~~~~~~
+  compilation terminated.
+  
+  It appears you are missing some prerequisite to build the package from source.
+  
+  You may install a binary package by installing 'psycopg2-binary' from PyPI.
+  If you want to install psycopg2 from source, please install the packages
+  required for the build and try again.
+  
+  For further information please check the 'doc/src/install.rst' file (also at
+  <https://www.psycopg.org/docs/install.html>).
+  
+  error: command 'gcc' failed with exit status 1
+  ----------------------------------------
+  ERROR: Failed building wheel for psycopg2-binary
+  Running setup.py clean for psycopg2-binary
+Failed to build psycopg2-binary
+Installing collected packages: psycopg2-binary, psycopg2-pool, postgres
+    Running setup.py install for psycopg2-binary ... error
+    ERROR: Command errored out with exit status 1:
+     command: /opt/conda/bin/python -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-_j_g2j_z/psycopg2-binary_432ac70e03c74c78879cac728a2846fb/setup.py'"'"'; __file__='"'"'/tmp/pip-install-_j_g2j_z/psycopg2-binary_432ac70e03c74c78879cac728a2846fb/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /tmp/pip-record-nq7ouwv0/install-record.txt --single-version-externally-managed --compile --install-headers /opt/conda/include/python3.6m/psycopg2-binary
+         cwd: /tmp/pip-install-_j_g2j_z/psycopg2-binary_432ac70e03c74c78879cac728a2846fb/
+    Complete output (38 lines):
+    running install
+    running build
+    running build_py
+    creating build
+    creating build/lib.linux-x86_64-3.6
+    creating build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/errorcodes.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/__init__.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/extensions.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/pool.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/sql.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/errors.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/_json.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/_range.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/tz.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/_ipaddress.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/extras.py -> build/lib.linux-x86_64-3.6/psycopg2
+    running build_ext
+    building 'psycopg2._psycopg' extension
+    creating build/temp.linux-x86_64-3.6
+    creating build/temp.linux-x86_64-3.6/psycopg
+    gcc -pthread -Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -fPIC -DPSYCOPG_VERSION=2.9.8 (dt dec pq3 ext lo64) -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=90606 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/opt/conda/include/python3.6m -I. -I/opt/conda/include -I/opt/conda/include/server -I/opt/conda/include -c psycopg/psycopgmodule.c -o build/temp.linux-x86_64-3.6/psycopg/psycopgmodule.o -Wdeclaration-after-statement
+    In file included from psycopg/psycopgmodule.c:28:0:
+    ./psycopg/psycopg.h:36:10: fatal error: libpq-fe.h: No such file or directory
+     #include <libpq-fe.h>
+              ^~~~~~~~~~~~
+    compilation terminated.
+    
+    It appears you are missing some prerequisite to build the package from source.
+    
+    You may install a binary package by installing 'psycopg2-binary' from PyPI.
+    If you want to install psycopg2 from source, please install the packages
+    required for the build and try again.
+    
+    For further information please check the 'doc/src/install.rst' file (also at
+    <https://www.psycopg.org/docs/install.html>).
+    
+    error: command 'gcc' failed with exit status 1
+    ----------------------------------------
+ERROR: Command errored out with exit status 1: /opt/conda/bin/python -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-_j_g2j_z/psycopg2-binary_432ac70e03c74c78879cac728a2846fb/setup.py'"'"'; __file__='"'"'/tmp/pip-install-_j_g2j_z/psycopg2-binary_432ac70e03c74c78879cac728a2846fb/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /tmp/pip-record-nq7ouwv0/install-record.txt --single-version-externally-managed --compile --install-headers /opt/conda/include/python3.6m/psycopg2-binary Check the logs for full command output.
+home root$ 
+home root$ pip install psycopg2
+Requirement already satisfied: psycopg2 in /opt/conda/lib/python3.6/site-packages (2.7.4)
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+home root$ pip install psycopg2-binary
+Collecting psycopg2-binary
+  Using cached psycopg2-binary-2.9.8.tar.gz (383 kB)
+  Preparing metadata (setup.py) ... done
+Building wheels for collected packages: psycopg2-binary
+  Building wheel for psycopg2-binary (setup.py) ... error
+  ERROR: Command errored out with exit status 1:
+   command: /opt/conda/bin/python -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-q7aqanzq/psycopg2-binary_dbbce208c96d47918c2e79b1027d8d9e/setup.py'"'"'; __file__='"'"'/tmp/pip-install-q7aqanzq/psycopg2-binary_dbbce208c96d47918c2e79b1027d8d9e/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' bdist_wheel -d /tmp/pip-wheel-o0jqynbo
+       cwd: /tmp/pip-install-q7aqanzq/psycopg2-binary_dbbce208c96d47918c2e79b1027d8d9e/
+  Complete output (38 lines):
+  running bdist_wheel
+  running build
+  running build_py
+  creating build
+  creating build/lib.linux-x86_64-3.6
+  creating build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/errorcodes.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/__init__.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/extensions.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/pool.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/sql.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/errors.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/_json.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/_range.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/tz.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/_ipaddress.py -> build/lib.linux-x86_64-3.6/psycopg2
+  copying lib/extras.py -> build/lib.linux-x86_64-3.6/psycopg2
+  running build_ext
+  building 'psycopg2._psycopg' extension
+  creating build/temp.linux-x86_64-3.6
+  creating build/temp.linux-x86_64-3.6/psycopg
+  gcc -pthread -Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -fPIC -DPSYCOPG_VERSION=2.9.8 (dt dec pq3 ext lo64) -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=90606 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/opt/conda/include/python3.6m -I. -I/opt/conda/include -I/opt/conda/include/server -I/opt/conda/include -c psycopg/psycopgmodule.c -o build/temp.linux-x86_64-3.6/psycopg/psycopgmodule.o -Wdeclaration-after-statement
+  In file included from psycopg/psycopgmodule.c:28:0:
+  ./psycopg/psycopg.h:36:10: fatal error: libpq-fe.h: No such file or directory
+   #include <libpq-fe.h>
+            ^~~~~~~~~~~~
+  compilation terminated.
+  
+  It appears you are missing some prerequisite to build the package from source.
+  
+  You may install a binary package by installing 'psycopg2-binary' from PyPI.
+  If you want to install psycopg2 from source, please install the packages
+  required for the build and try again.
+  
+  For further information please check the 'doc/src/install.rst' file (also at
+  <https://www.psycopg.org/docs/install.html>).
+  
+  error: command 'gcc' failed with exit status 1
+  ----------------------------------------
+  ERROR: Failed building wheel for psycopg2-binary
+  Running setup.py clean for psycopg2-binary
+Failed to build psycopg2-binary
+Installing collected packages: psycopg2-binary
+    Running setup.py install for psycopg2-binary ... error
+    ERROR: Command errored out with exit status 1:
+     command: /opt/conda/bin/python -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-q7aqanzq/psycopg2-binary_dbbce208c96d47918c2e79b1027d8d9e/setup.py'"'"'; __file__='"'"'/tmp/pip-install-q7aqanzq/psycopg2-binary_dbbce208c96d47918c2e79b1027d8d9e/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /tmp/pip-record-aycwuuql/install-record.txt --single-version-externally-managed --compile --install-headers /opt/conda/include/python3.6m/psycopg2-binary
+         cwd: /tmp/pip-install-q7aqanzq/psycopg2-binary_dbbce208c96d47918c2e79b1027d8d9e/
+    Complete output (38 lines):
+    running install
+    running build
+    running build_py
+    creating build
+    creating build/lib.linux-x86_64-3.6
+    creating build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/errorcodes.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/__init__.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/extensions.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/pool.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/sql.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/errors.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/_json.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/_range.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/tz.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/_ipaddress.py -> build/lib.linux-x86_64-3.6/psycopg2
+    copying lib/extras.py -> build/lib.linux-x86_64-3.6/psycopg2
+    running build_ext
+    building 'psycopg2._psycopg' extension
+    creating build/temp.linux-x86_64-3.6
+    creating build/temp.linux-x86_64-3.6/psycopg
+    gcc -pthread -Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -fPIC -DPSYCOPG_VERSION=2.9.8 (dt dec pq3 ext lo64) -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=90606 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/opt/conda/include/python3.6m -I. -I/opt/conda/include -I/opt/conda/include/server -I/opt/conda/include -c psycopg/psycopgmodule.c -o build/temp.linux-x86_64-3.6/psycopg/psycopgmodule.o -Wdeclaration-after-statement
+    In file included from psycopg/psycopgmodule.c:28:0:
+    ./psycopg/psycopg.h:36:10: fatal error: libpq-fe.h: No such file or directory
+     #include <libpq-fe.h>
+              ^~~~~~~~~~~~
+    compilation terminated.
+    
+    It appears you are missing some prerequisite to build the package from source.
+    
+    You may install a binary package by installing 'psycopg2-binary' from PyPI.
+    If you want to install psycopg2 from source, please install the packages
+    required for the build and try again.
+    
+    For further information please check the 'doc/src/install.rst' file (also at
+    <https://www.psycopg.org/docs/install.html>).
+    
+    error: command 'gcc' failed with exit status 1
+    ----------------------------------------
+ERROR: Command errored out with exit status 1: /opt/conda/bin/python -u -c 'import io, os, sys, setuptools, tokenize; sys.argv[0] = '"'"'/tmp/pip-install-q7aqanzq/psycopg2-binary_dbbce208c96d47918c2e79b1027d8d9e/setup.py'"'"'; __file__='"'"'/tmp/pip-install-q7aqanzq/psycopg2-binary_dbbce208c96d47918c2e79b1027d8d9e/setup.py'"'"';f = getattr(tokenize, '"'"'open'"'"', open)(__file__) if os.path.exists(__file__) else io.StringIO('"'"'from setuptools import setup; setup()'"'"');code = f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /tmp/pip-record-aycwuuql/install-record.txt --single-version-externally-managed --compile --install-headers /opt/conda/include/python3.6m/psycopg2-binary Check the logs for full command output
