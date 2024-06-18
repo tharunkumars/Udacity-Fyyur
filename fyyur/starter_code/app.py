@@ -259,6 +259,7 @@ def search_venues():
   # TODO: implement search on venues with partial string search. Ensure it is case-insensitive.
   # seach for Hop should return "The Musical Hop".
   # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
+  """
   response={
     "count": 1,
     "data": [{
@@ -267,6 +268,13 @@ def search_venues():
       "num_upcoming_shows": 0,
     }]
   }
+  """
+  searchTermValue = request.form.get('search_term')
+  #objVenue = Venue() <input class="form-control" type="search" name="search_term" placeholder="Find a venue" aria-label="Search">
+  #form.populate_obj(objVenue)
+  print ( " ####### venueID ##### " + searchTermValue)
+  formedquery = db.session.query(Venue)
+  response = formedquery.filter(Venue.name.ilike("%"+searchTermValue+"%")).all()
   return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
 @app.route('/venues/<int:venue_id>')
@@ -352,9 +360,39 @@ def show_venue(venue_id):
   }
   data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
   return render_template('pages/show_venue.html', venue=data)
+#----------------------------------------------------------------------------#
+# Forms.
+#----------------------------------------------------------------------------#
 
+class VenueGetForm(FlaskForm):
+  name = StringField('Name', validators=[DataRequired()])
+  city = StringField('city', validators=[DataRequired()])
+  state = StringField('state', validators=[DataRequired()])
+  address = StringField('address', validators=[DataRequired()])
+  phone = StringField('phone', validators=[DataRequired()])
+  facebook_link = StringField('facebook_link', validators=[DataRequired()])
+  image_link = StringField('image_link', validators=[DataRequired()])
+  website_link = StringField('website_link', validators=[DataRequired()])
+  seeking_talent = StringField('seeking_talent', validators=[DataRequired()])
+  seeking_description = StringField('seeking_description', validators=[DataRequired()])
+  genres = StringField('genres', validators=[DataRequired()])
+
+class ArtistGetForm(FlaskForm):
+  name = StringField('Name', validators=[DataRequired()])
+  city = StringField('city', validators=[DataRequired()])
+  state = StringField('state', validators=[DataRequired()])
+  address = StringField('address', validators=[DataRequired()])
+  phone = StringField('phone', validators=[DataRequired()])
+  facebook_link = StringField('facebook_link', validators=[DataRequired()])
+  image_link = StringField('image_link', validators=[DataRequired()])
+  website_link = StringField('website_link', validators=[DataRequired()])
+  seeking_venue = StringField('seeking_venue', validators=[DataRequired()])
+  seeking_description = StringField('seeking_description', validators=[DataRequired()])
+  genres = StringField('genres', validators=[DataRequired()])
+
+#----------------------------------------------------------------------------#
 #  Create Venue
-#  ----------------------------------------------------------------
+#  --------------------------------------------------------------------------#
 
 @app.route('/venues/create', methods=['GET'])
 def create_venue_form():
@@ -365,9 +403,15 @@ def create_venue_form():
 def create_venue_submission():
   # TODO: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
-
+  # updates from Tharun
+  form = VenueGetForm()  
+  objVenue = Venue()
+  form.populate_obj(objVenue)
+  print ( " ####### venueID ##### " + objVenue.name)
+  db.session.add(objVenue)  
+  db.session.commit()
   # on successful db insert, flash success
-  flash('Venue ' + request.form['name'] + ' was successfully listed!')
+  flash('Venue ' + request.form['name'] + ' was successfully listed!  ')
   # TODO: on unsuccessful db insert, flash an error instead.
   # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
   # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
@@ -398,6 +442,7 @@ def artists():
     "name": "The Wild Sax Band",
   }]
   """
+
   formedquery = db.session.query(Artist)
   data = formedquery.group_by(Artist.id,Artist.state).order_by(Artist.city).all()
   #data = formedquery
@@ -566,7 +611,12 @@ def create_artist_submission():
   # called upon submitting the new artist listing form
   # TODO: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
-
+  form = ArtistGetForm()  
+  objArtist = Artist()
+  form.populate_obj(objArtist)
+  print ( " ####### venueID ##### " + objArtist.name)
+  db.session.add(objArtist)  
+  db.session.commit()
   # on successful db insert, flash success
   flash('Artist ' + request.form['name'] + ' was successfully listed!')
   # TODO: on unsuccessful db insert, flash an error instead.
@@ -581,6 +631,7 @@ def create_artist_submission():
 def shows():
   # displays list of shows at /shows
   # TODO: replace with real venues data.
+  """
   data=[{
     "venue_id": 1,
     "venue_name": "The Musical Hop",
@@ -617,6 +668,15 @@ def shows():
     "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
     "start_time": "2035-04-15T20:00:00.000Z"
   }]
+  """
+  ### Update from Tharun, Retrieving Values from DB and showing in UI
+  formedquery = db.session.query(shows)
+  data = formedquery.group_by(Venue.id,Venue.state).order_by(Venue.city).all()
+  #data = formedquery
+  #data = Venue.query.all()
+  for venueV in data:
+    print("Venue Details   " + venueV.name)
+  return render_template('pages/venues.html', areas=data);
   return render_template('pages/shows.html', shows=data)
 
 @app.route('/shows/create')
