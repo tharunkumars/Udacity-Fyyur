@@ -63,6 +63,15 @@ def index():
     db.session.add(person)
     db.session.commit()
 
+    db.session.get
+    db.session.get_bind
+    db.session.get_one
+    db.session.bind
+    db.session.__new__
+    db.session.__init__
+
+
+
     personObject = Person.query.filter_by(id=2)
     return "Hello " + personObject.name + " from App using SQLAlchemy !!"
 

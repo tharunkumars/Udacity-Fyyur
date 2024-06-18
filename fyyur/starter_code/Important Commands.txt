@@ -16,9 +16,21 @@
 	  pip install flask-moment --upgrade
 	  pip install flask-wtf --upgrade
 	  pip install flask_sqlalchemy --upgrade
+	  
+	  pip install flask-migrate
+	  pip install psycopg2-binary
   
   Flask Migrate Commands used :
   
 	  flask db init
 	  flask db migrate -m "Addition of missing model columns"
 	  flask db upgrade
+	  
+	  
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.GroupingError) column "Venue.id" must appear in the GROUP BY clause or be used in an aggregate function
+LINE 1: SELECT "Venue".id AS "Venue_id", "Venue".name AS "Venue_name...
+               ^
+
+[SQL: SELECT "Venue".id AS "Venue_id", "Venue".name AS "Venue_name", "Venue".city AS "Venue_city", "Venue".state AS "Venue_state", "Venue".address AS "Venue_address", "Venue".phone AS "Venue_phone", "Venue".facebook_link AS "Venue_facebook_link", "Venue".image_link AS "Venue_image_link", "Venue".website_link AS "Venue_website_link", "Venue"."lookingForTalent" AS "Venue_lookingForTalent", "Venue"."descForTalent" AS "Venue_descForTalent"
+FROM "Venue" GROUP BY "Venue".state ORDER BY "Venue".city]
+(Background on this error at: https://sqlalche.me/e/20/f405)

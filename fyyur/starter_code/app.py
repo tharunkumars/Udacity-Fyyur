@@ -15,6 +15,13 @@ import logging
 from logging import Formatter, FileHandler
 from flask_wtf import *
 from forms import *
+
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+from sqlalchemy import select
+
+
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -110,12 +117,15 @@ def index():
   # Update from Tharun, Leaving the create_all() function as is, 
   # as this will not cause any Change to an existing table
   print(" Inside the main Route ")
+  # Update from Tharun,Commenting the below block to avoid 
+  # any new record entries into tables
+  """
   db.create_all()
 
   #Create object for Venue and adding Values into the table
-  Venue1 = Venue(id = 1,
+  Venue1 = Venue(id = 4,
                  name= "The Musical Hop",
-                 city = "San Francisco",
+                 city = "San Francisco 1",
                  state = "CA", 
                  address = "AddressVenue1 1015 Folsom Street",
                  phone = "123-123-1234",
@@ -125,9 +135,9 @@ def index():
                  lookingForTalent = True,
                  descForTalent = "Venue1Talent"
                 )
-  Venue2 = Venue(id = 2,
+  Venue2 = Venue(id = 5,
                  name="The Dueling Pianos Bar",
-                 city = "New York",
+                 city = "New York 1",
                  state = "NY",
                  address = "AddressVenue2 1024 Folsom Street",
                  phone = "123-123-1234",
@@ -137,9 +147,9 @@ def index():
                  lookingForTalent =    True,
                  descForTalent = "Venue2Talent"
                     )
-  Venue3 = Venue(id = 3,
+  Venue3 = Venue(id = 6,
                  name="Park Square Live Music & Coffee",
-                 city = "San Francisco",
+                 city = "San Francisco 2",
                  state ="CA",
                  address = "AddressVenue3 1006 Folsom Street",
                  phone = "123-123-1234",
@@ -152,10 +162,10 @@ def index():
   
   VenueList = [Venue1,Venue2,Venue3]
   db.session.add_all(VenueList)
-  
-  Artist1 = Artist(id = 1,
+ 
+  Artist1 = Artist(id = 4,
                    name="The Musical Hop",
-                   city = "San Francisco",
+                   city = "San Francisco 1 ",
                    state ="CA",
                    address = "AddressVenue1 1015 Folsom Street",
                    phone = "123-123-1234",
@@ -166,9 +176,9 @@ def index():
                    lookingForVenue = True,
                    descForVenue = "Venue1Talent"
                     )
-  Artist2 = Artist(id = 2,
+  Artist2 = Artist(id = 5,
                    name="The Dueling Pianos Bar",
-                   city = "New York",
+                   city = "New York 4 ",
                    state ="NY",
                    address = "AddressVenue2 1024 Folsom Street",
                    phone = "123-123-1234",
@@ -179,9 +189,9 @@ def index():
                    lookingForVenue = True,
                    descForVenue = "Venue2Talent"
                     )
-  Artist3 = Artist(id = 3,
+  Artist3 = Artist(id = 6,
                    name="Park Square Live Music & Coffee",
-                   city = "San Francisco",
+                   city = "San Francisco 5 ",
                    state ="CA",
                    address = "AddressVenue3 1006 Folsom Street",
                    phone = "123-123-1234",
@@ -194,8 +204,9 @@ def index():
                     )
   ArtistList = [Artist1,Artist2,Artist3]
   db.session.add_all(ArtistList)
-
+  
   db.session.commit()
+  """
   return render_template('pages/home.html')
 
 
@@ -206,7 +217,8 @@ def index():
 def venues():
   # TODO: replace with real venues data.
   #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
-  data=[{
+  # Update from Tharun,Commenting the below Dummy Data block
+  """data=[{
     "city": "San Francisco",
     "state": "CA",
     "venues": [{
@@ -227,6 +239,19 @@ def venues():
       "num_upcoming_shows": 0,
     }]
   }]
+  """
+  # Update from Tharun, Including Code for Venue Details Retrival from DB.
+  # data = Venue.query.group_by(Venue.state).order_by(Venue.city).all()
+  # venueV = Venue()
+  # db.session.add(venueV)
+  # data = db.session.query(venueV).group_by(venueV.state).order_by(venueV.city).all()
+  # data = Venue.query.group_by(Venue.state).order_by(Venue.city).all()
+  formedquery = db.session.query(Venue)
+  data = formedquery.group_by(Venue.id,Venue.state).order_by(Venue.city).all()
+  #data = formedquery
+  #data = Venue.query.all()
+  for venueV in data:
+    print("Venue Details   " + venueV.name)
   return render_template('pages/venues.html', areas=data);
 
 @app.route('/venues/search', methods=['POST'])
@@ -362,7 +387,7 @@ def delete_venue(venue_id):
 @app.route('/artists')
 def artists():
   # TODO: replace with real data returned from querying the database
-  data=[{
+  """data=[{
     "id": 4,
     "name": "Guns N Petals",
   }, {
@@ -372,6 +397,13 @@ def artists():
     "id": 6,
     "name": "The Wild Sax Band",
   }]
+  """
+  formedquery = db.session.query(Artist)
+  data = formedquery.group_by(Artist.id,Artist.state).order_by(Artist.city).all()
+  #data = formedquery
+  #data = Venue.query.all()
+  for artistV in data:
+    print("Venue Details   " + artistV.name)
   return render_template('pages/artists.html', artists=data)
 
 @app.route('/artists/search', methods=['POST'])
