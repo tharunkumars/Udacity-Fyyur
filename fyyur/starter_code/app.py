@@ -390,6 +390,8 @@ class ArtistGetForm(FlaskForm):
   seeking_description = StringField('seeking_description', validators=[DataRequired()])
   genres = StringField('genres', validators=[DataRequired()])
 
+
+
 #----------------------------------------------------------------------------#
 #  Create Venue
 #  --------------------------------------------------------------------------#
@@ -426,7 +428,8 @@ def delete_venue(venue_id):
   # clicking that button delete it from the db then redirect the user to the homepage
   return None
 
-#  Artists
+#  ----------------------------------------------------------------  
+#  Artists Functionality
 #  ----------------------------------------------------------------
 @app.route('/artists')
 def artists():
@@ -624,7 +627,8 @@ def create_artist_submission():
   return render_template('pages/home.html')
 
 
-#  Shows
+#  ----------------------------------------------------------------  
+#  Shows Functionality
 #  ----------------------------------------------------------------
 
 @app.route('/shows')
@@ -671,15 +675,27 @@ def shows():
   """
   ### Update from Tharun, Retrieving Values from DB and showing in UI
   formedquery = db.session.query(shows)
-  data = formedquery.group_by(Venue.id,Venue.state).order_by(Venue.city).all()
+  data = formedquery.group_by(shows.venue_id).all()
   #data = formedquery
   #data = Venue.query.all()
-  for venueV in data:
-    print("Venue Details   " + venueV.name)
-  return render_template('pages/venues.html', areas=data);
+  for showsV in data:
+    print("Venue Details   " + showsV.venue_id)
   return render_template('pages/shows.html', shows=data)
 
-@app.route('/shows/create')
+#  ----------------------------------------------------------------  
+#  Shows Forms
+#  ----------------------------------------------------------------
+class ShowGetForm(FlaskForm):
+  venue_id = StringField('venue_id', validators=[DataRequired()])
+  artist_id = StringField('artist_id', validators=[DataRequired()])
+  start_time = StringField('start_time', validators=[DataRequired()])
+
+class Shows:
+       venue_id = 0;
+       artist_id = 0;
+       start_time = 0;
+
+@app.route('/shows/create', methods=['GET'])
 def create_shows():
   # renders form. do not touch.
   form = ShowForm()
@@ -690,8 +706,32 @@ def create_show_submission():
   # called to create new shows in the db, upon submitting new show listing form
   # TODO: insert form data as a new Show record in the db, instead
 
+  # updates from Tharun
+  # Retriev the VenueId and ArtistID from the form
+  form = ShowForm()
+  objShow = Shows()
+  form.populate_obj(objShow)
+  print ( " ####### AFTER THE populate object ##### ")
+  print ( objShow.venue_id)
+  print ( " ####### artistID ##### " + objShow.artist_id)
+
+  # Retriev the records for Venue
+  ObjVenue=Venue()
+  formedquery = db.session.query(ObjVenue)
+  ObjVenue = formedquery.filter_by(id=objShow.venue_id)
+  print ( " ####### venue Name ##### " + ObjVenue.name)
+
+  # Retriev the records for Artist
+  ObjArtist=Artist()
+  formedquery = db.session.query(ObjArtist)
+  ObjArtist = formedquery.filter_by(id=objShow.artist_id)
+  print ( " ####### Artist Name ##### " + ObjArtist.name)
+
+  # Poppulate Association Table Shows
+  ObjVenue.Artist.append(ObjArtist)
+  db.session.commit()
   # on successful db insert, flash success
-  flash('Show was successfully listed!')
+  flash('Show for Artist ' + ObjArtist.name + ' was successfully listed for venue  ' + ObjVenue.name)
   # TODO: on unsuccessful db insert, flash an error instead.
   # e.g., flash('An error occurred. Show could not be listed.')
   # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
