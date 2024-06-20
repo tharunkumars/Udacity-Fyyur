@@ -674,6 +674,7 @@ def shows():
   }]
   """
   ### Update from Tharun, Retrieving Values from DB and showing in UI
+  print("INSIDE SHOWS search")
   formedquery = db.session.query(shows)
   data = formedquery.group_by(shows.venue_id).all()
   #data = formedquery
@@ -690,10 +691,10 @@ class ShowGetForm(FlaskForm):
   artist_id = StringField('artist_id', validators=[DataRequired()])
   start_time = StringField('start_time', validators=[DataRequired()])
 
-class Shows:
+class ShowsClass:
        venue_id = 0;
        artist_id = 0;
-       start_time = 0;
+       start_time = 0
 
 @app.route('/shows/create', methods=['GET'])
 def create_shows():
@@ -708,33 +709,45 @@ def create_show_submission():
 
   # updates from Tharun
   # Retriev the VenueId and ArtistID from the form
-  form = ShowForm()
-  objShow = Shows()
-  form.populate_obj(objShow)
+  # form = ShowForm()
+  #objShow = ShowsClass()
+  #form.populate_obj(objShow)
+  #print ( " ####### AFTER THE populate object artist_id ##### " + objShow.artist_id)
   print ( " ####### AFTER THE populate object ##### ")
-  print ( objShow.venue_id)
-  print ( " ####### artistID ##### " + objShow.artist_id)
+  print ( request.form.get('artist_id'))
 
-  # Retriev the records for Venue
-  ObjVenue=Venue()
-  formedquery = db.session.query(ObjVenue)
-  ObjVenue = formedquery.filter_by(id=objShow.venue_id)
-  print ( " ####### venue Name ##### " + ObjVenue.name)
+  input_Venue_id = request.form.get('venue_id')
+  input_Artist_id = request.form.get('artist_id')  
 
-  # Retriev the records for Artist
-  ObjArtist=Artist()
-  formedquery = db.session.query(ObjArtist)
-  ObjArtist = formedquery.filter_by(id=objShow.artist_id)
-  print ( " ####### Artist Name ##### " + ObjArtist.name)
+  print ( "### input_Venue_id ###    " + input_Venue_id );
+  print ( "### input_Artist_id ###   " + input_Artist_id );
+
+  # Retriev the records for Venue and Artist
+  venueV = db.session.query(Venue).filter_by(id=input_Venue_id).first()
+  artistV = db.session.query(Artist).filter_by(id=input_Artist_id).first()
+  #resultVenue = Venue.query.filter_by(id=input_Venue_id)
+  if venueV:
+    print( " ####### venue Name ##### " + venueV.name)
+    flash(' we have a venue named ' +  venueV.name)
+  else:
+     flash('No such Venue')
+
+  if artistV:
+    print( " ####### Artist Name ##### " + artistV.name)
+    flash(' we have a venue named ' +  artistV.name)
+  else:
+     flash('No such Artist')
 
   # Poppulate Association Table Shows
-  ObjVenue.Artist.append(ObjArtist)
+  venueV.artists.append(artistV)
   db.session.commit()
+
   # on successful db insert, flash success
-  flash('Show for Artist ' + ObjArtist.name + ' was successfully listed for venue  ' + ObjVenue.name)
+  flash('Show for Artist ' + artistV.name + ' was successfully listed for venue  ' + venueV.name)
   # TODO: on unsuccessful db insert, flash an error instead.
   # e.g., flash('An error occurred. Show could not be listed.')
   # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
+  # """
   return render_template('pages/home.html')
 
 @app.errorhandler(404)
