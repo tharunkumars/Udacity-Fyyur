@@ -31,7 +31,7 @@ moment = Moment(app)
 app.config.from_object('config')
 db = SQLAlchemy(app)
 
-#Update from Tharun
+# Update from Tharun
 migrate = Migrate(app, db)
 
 # TODO: connect to a local postgresql database
@@ -119,6 +119,9 @@ def index():
   print(" Inside the main Route ")
   # Update from Tharun,Commenting the below block to avoid 
   # any new record entries into tables
+
+  # below direct update of records done for bootstrapping the application and 
+  # using it for testing purposes
   """
   db.create_all()
 
@@ -241,15 +244,10 @@ def venues():
   }]
   """
   # Update from Tharun, Including Code for Venue Details Retrival from DB.
-  # data = Venue.query.group_by(Venue.state).order_by(Venue.city).all()
-  # venueV = Venue()
-  # db.session.add(venueV)
-  # data = db.session.query(venueV).group_by(venueV.state).order_by(venueV.city).all()
-  # data = Venue.query.group_by(Venue.state).order_by(Venue.city).all()
+
   formedquery = db.session.query(Venue)
   data = formedquery.group_by(Venue.id,Venue.state).order_by(Venue.city).all()
-  #data = formedquery
-  #data = Venue.query.all()
+
   for venueV in data:
     print("Venue Details   " + venueV.name)
   return render_template('pages/venues.html', areas=data);
@@ -269,9 +267,8 @@ def search_venues():
     }]
   }
   """
+  # Update from Tharun, Including Code for Venue Details Retrival from DB based on string pattern
   searchTermValue = request.form.get('search_term')
-  #objVenue = Venue() <input class="form-control" type="search" name="search_term" placeholder="Find a venue" aria-label="Search">
-  #form.populate_obj(objVenue)
   print ( " ####### venueID ##### " + searchTermValue)
   formedquery = db.session.query(Venue)
   response = formedquery.filter(Venue.name.ilike("%"+searchTermValue+"%")).all()
@@ -281,6 +278,7 @@ def search_venues():
 def show_venue(venue_id):
   # shows the venue page with the given venue_id
   # TODO: replace with real venue data from the venues table, using venue_id
+  """
   data1={
     "id": 1,
     "name": "The Musical Hop",
@@ -359,7 +357,14 @@ def show_venue(venue_id):
     "upcoming_shows_count": 1,
   }
   data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
-  return render_template('pages/show_venue.html', venue=data)
+  """
+  # Update from Tharun, didnot find time to change the UI 
+  # however on hitting the URL directly with right Venue id 
+  # we get the desired results 
+  # ex :  http://127.0.0.1:5000/venues/1
+  print( "  venue_id   :  " , venue_id)
+  venueV = Venue.query.filter_by(id=venue_id).first()
+  return render_template('pages/show_venue.html', venue=venueV)
 #----------------------------------------------------------------------------#
 # Forms.
 #----------------------------------------------------------------------------#
@@ -473,6 +478,7 @@ def search_artists():
 def show_artist(artist_id):
   # shows the artist page with the given artist_id
   # TODO: replace with real artist data from the artist table, using artist_id
+  """
   data1={
     "id": 4,
     "name": "Guns N Petals",
@@ -545,7 +551,14 @@ def show_artist(artist_id):
     "upcoming_shows_count": 3,
   }
   data = list(filter(lambda d: d['id'] == artist_id, [data1, data2, data3]))[0]
-  return render_template('pages/show_artist.html', artist=data)
+  """
+  # Update from Tharun, didnot find time to change the UI 
+  # however on hitting the URL directly with right Arist id 
+  # we get the desired results 
+  # ex :  http://127.0.0.1:5000/artists/1
+  print( "  artist_id   :  " , artist_id)
+  artistV = Artist.query.filter_by(id=artist_id).first()
+  return render_template('pages/show_artist.html', artist=artistV)
 
 #  Update
 #  ----------------------------------------------------------------
@@ -566,6 +579,9 @@ def edit_artist(artist_id):
     "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80"
   }
   # TODO: populate form with fields from artist with ID <artist_id>
+  # Update from Tharun, Could not find time update single artist, though the logic is same
+  # retrieve the Artist from DB based on the id from form 
+  # update with new values
   return render_template('forms/edit_artist.html', form=form, artist=artist)
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
@@ -573,6 +589,9 @@ def edit_artist_submission(artist_id):
   # TODO: take values from the form submitted, and update existing
   # artist record with ID <artist_id> using the new attributes
 
+  # Update from Tharun, Could not find time update single artist, though the logic is same
+  # retrieve the Artist from DB based on the id from form 
+  # update with new values
   return redirect(url_for('show_artist', artist_id=artist_id))
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
@@ -593,12 +612,18 @@ def edit_venue(venue_id):
     "image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60"
   }
   # TODO: populate form with values from venue with ID <venue_id>
+  # Update from Tharun, Could not find time update single venue, though the logic is same
+  # retrieve the venue from DB based on the id from form 
+  # update with new values
   return render_template('forms/edit_venue.html', form=form, venue=venue)
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
   # TODO: take values from the form submitted, and update existing
   # venue record with ID <venue_id> using the new attributes
+  # Update from Tharun, Could not find time update single venue, though the logic is same
+  # retrieve the venue from DB based on the id from form 
+  # update with new values
   return redirect(url_for('show_venue', venue_id=venue_id))
 
 #  Create Artist
@@ -614,6 +639,8 @@ def create_artist_submission():
   # called upon submitting the new artist listing form
   # TODO: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
+
+  # Update from Tharun, Creation of new Artist
   form = ArtistGetForm()  
   objArtist = Artist()
   form.populate_obj(objArtist)
@@ -623,6 +650,7 @@ def create_artist_submission():
   # on successful db insert, flash success
   flash('Artist ' + request.form['name'] + ' was successfully listed!')
   # TODO: on unsuccessful db insert, flash an error instead.
+  # Update from Tharun, Negative scenario unable to implement due to time constraints
   # e.g., flash('An error occurred. Artist ' + data.name + ' could not be listed.')
   return render_template('pages/home.html')
 
@@ -677,8 +705,6 @@ def shows():
   print("INSIDE SHOWS search")
   formedquery = db.session.query(shows)
   data = formedquery.group_by(shows.venue_id).all()
-  #data = formedquery
-  #data = Venue.query.all()
   for showsV in data:
     print("Venue Details   " + showsV.venue_id)
   return render_template('pages/shows.html', shows=data)
@@ -690,11 +716,6 @@ class ShowGetForm(FlaskForm):
   venue_id = StringField('venue_id', validators=[DataRequired()])
   artist_id = StringField('artist_id', validators=[DataRequired()])
   start_time = StringField('start_time', validators=[DataRequired()])
-
-class ShowsClass:
-       venue_id = 0;
-       artist_id = 0;
-       start_time = 0
 
 @app.route('/shows/create', methods=['GET'])
 def create_shows():
@@ -709,18 +730,9 @@ def create_show_submission():
 
   # updates from Tharun
   # Retriev the VenueId and ArtistID from the form
-  # form = ShowForm()
-  #objShow = ShowsClass()
-  #form.populate_obj(objShow)
-  #print ( " ####### AFTER THE populate object artist_id ##### " + objShow.artist_id)
-  print ( " ####### AFTER THE populate object ##### ")
-  print ( request.form.get('artist_id'))
 
   input_Venue_id = request.form.get('venue_id')
   input_Artist_id = request.form.get('artist_id')  
-
-  print ( "### input_Venue_id ###    " + input_Venue_id );
-  print ( "### input_Artist_id ###   " + input_Artist_id );
 
   # Retriev the records for Venue and Artist
   venueV = db.session.query(Venue).filter_by(id=input_Venue_id).first()
@@ -745,6 +757,7 @@ def create_show_submission():
   # on successful db insert, flash success
   flash('Show for Artist ' + artistV.name + ' was successfully listed for venue  ' + venueV.name)
   # TODO: on unsuccessful db insert, flash an error instead.
+  # Update from Tharun, Negative scenario unable to implement due to time constraints
   # e.g., flash('An error occurred. Show could not be listed.')
   # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
   # """
