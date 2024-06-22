@@ -5,8 +5,20 @@
 import json
 import dateutil.parser
 import babel
-from flask import Flask, render_template, request, Response, flash, redirect, url_for
-from flask_moment import *
+
+# Update from Tharun, Incorporating Review Comments on PEP8 Starts
+#from flask import Flask, render_template, request, Response, flash, redirect, url_for
+from flask import (
+  Flask, 
+  render_template, 
+  request, 
+  Response, 
+  flash, 
+  redirect, 
+  url_for
+)
+## Incorporating Review Comments on PEP8 Ends
+from flask_moment import Moment
 from jinja2.utils import markupsafe
 from flask_sqlalchemy import SQLAlchemy
 #Update from Tharun
@@ -16,11 +28,13 @@ from logging import Formatter, FileHandler
 from flask_wtf import *
 from forms import *
 
+# Update from Tharun, Incorporating Review Comments on refactoring models STARTS
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
 from sqlalchemy import select
 
+from models import db,Venue,Artist,Show
+# Update from Tharun, Incorporating Review Comments on refactoring models Ends
 
 #----------------------------------------------------------------------------#
 # App Config.
@@ -29,70 +43,15 @@ from sqlalchemy import select
 app = Flask(__name__)
 moment = Moment(app)
 app.config.from_object('config')
-db = SQLAlchemy(app)
 
+# Update from Tharun, Incorporating Review Comments on refactoring models STARTS
+#db = SQLAlchemy(app)
+db.init_app(app)
+# Update from Tharun, Incorporating Review Comments on refactoring models Ends
 # Update from Tharun
 migrate = Migrate(app, db)
 
 # TODO: connect to a local postgresql database
-
-#----------------------------------------------------------------------------#
-# Models.
-#----------------------------------------------------------------------------#
-
-class Venue(db.Model):
-    __tablename__ = 'Venue'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    address = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    facebook_link = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
-    website_link = db.Column(db.String(500))  
-    #Update from Tharun to include additional fields missing from original Code  
-    lookingForTalent = db.Column(db.Boolean, default=False)
-    descForTalent = db.Column(db.String(500))
-    # Setting BiDirectional RelationShip between Venue table (considered as Parent)
-    # and Artist Table (considered as Child)
-    # Shows being created as Association table
-    artists = db.relationship('Artist', secondary='Shows',
-      backref=db.backref('Venue', lazy=True))
-
-# TODO: implement any missing fields, as a database migration using Flask-Migrate
-
-class Artist(db.Model):
-    __tablename__ = 'Artist'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    address = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    facebook_link = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
-    website_link = db.Column(db.String(500)) 
-    genres = db.Column(db.String(120))
-    #Update from Tharun to include additional fields missing from original Code
-    lookingForVenue = db.Column(db.Boolean, default=False)
-    descForVenue = db.Column(db.String(500))
-
-# TODO: implement any missing fields, as a database migration using Flask-Migrate
-     # Included in the both the Venue and Artist Models
-
-# TODO Implement Show and Artist models, 
-# and complete all model relationships and properties, as a database migration.
-
-# Implementing a Many2Many relationship and Creating an association table in SQLAlchemy
-    Shows = db.Table('Shows',
-    db.Column('venue_id', db.Integer, db.ForeignKey('Venue.id'), primary_key=True),
-    db.Column('venue_name', db.String),
-    db.Column('artist_id', db.Integer, db.ForeignKey('Artist.id'), primary_key=True),
-    db.Column('artist_name', db.String)
-    )
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -372,28 +331,30 @@ def show_venue(venue_id):
 class VenueGetForm(FlaskForm):
   name = StringField('Name', validators=[DataRequired()])
   city = StringField('city', validators=[DataRequired()])
-  state = StringField('state', validators=[DataRequired()])
   address = StringField('address', validators=[DataRequired()])
-  phone = StringField('phone', validators=[DataRequired()])
   facebook_link = StringField('facebook_link', validators=[DataRequired()])
   image_link = StringField('image_link', validators=[DataRequired()])
   website_link = StringField('website_link', validators=[DataRequired()])
   seeking_talent = StringField('seeking_talent', validators=[DataRequired()])
   seeking_description = StringField('seeking_description', validators=[DataRequired()])
-  genres = StringField('genres', validators=[DataRequired()])
+  ## Update from Tharun, invoking additional Custom Validator methods   
+  phone = StringField('phone', validators=[DataRequired(),validate_phone(FlaskForm)])
+  state = StringField('state', validators=[DataRequired(),validate_state(FlaskForm)])
+  genres = StringField('genres', validators=[DataRequired(),validate_genres(FlaskForm)])
 
 class ArtistGetForm(FlaskForm):
   name = StringField('Name', validators=[DataRequired()])
-  city = StringField('city', validators=[DataRequired()])
-  state = StringField('state', validators=[DataRequired()])
-  address = StringField('address', validators=[DataRequired()])
-  phone = StringField('phone', validators=[DataRequired()])
+  city = StringField('city', validators=[DataRequired()])  
+  address = StringField('address', validators=[DataRequired()])  
   facebook_link = StringField('facebook_link', validators=[DataRequired()])
   image_link = StringField('image_link', validators=[DataRequired()])
   website_link = StringField('website_link', validators=[DataRequired()])
   seeking_venue = StringField('seeking_venue', validators=[DataRequired()])
   seeking_description = StringField('seeking_description', validators=[DataRequired()])
-  genres = StringField('genres', validators=[DataRequired()])
+  ## Update from Tharun, invoking additional Custom Validator methods   
+  phone = StringField('phone', validators=[DataRequired(),validate_phone])
+  state = StringField('state', validators=[DataRequired(),validate_state])
+  genres = StringField('genres', validators=[DataRequired(),validate_genres])
 
 
 
@@ -413,6 +374,8 @@ def create_venue_submission():
   # updates from Tharun
   form = VenueGetForm()  
   objVenue = Venue()
+  ## Update from Tharun, invoking additional Custom Validator methods via validate_on_submit methods
+  form.validate_on_submit()
   form.populate_obj(objVenue)
   print ( " ####### venueID ##### " + objVenue.name)
   db.session.add(objVenue)  
