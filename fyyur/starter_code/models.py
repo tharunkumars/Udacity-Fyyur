@@ -20,8 +20,8 @@ class Venue(db.Model):
     website_link = db.Column(db.String(500))  
     genres = db.Column(db.String(120))
     #Update from Tharun to include additional fields missing from original Code  
-    lookingForTalent = db.Column(db.Boolean, default=False)
-    descForTalent = db.Column(db.String(500))
+    seeking_talent = db.Column(db.Boolean, default=False)
+    seeking_description = db.Column(db.String(500))
     # Setting BiDirectional RelationShip between Venue table (considered as Parent)
     # and Artist Table (considered as Child)
     # Shows being created as Association table
@@ -44,8 +44,8 @@ class Artist(db.Model):
     website_link = db.Column(db.String(500)) 
     genres = db.Column(db.String(120))
     #Update from Tharun to include additional fields missing from original Code
-    lookingForVenue = db.Column(db.Boolean, default=False)
-    descForVenue = db.Column(db.String(500))
+    seeking_venue = db.Column(db.Boolean, default=False)
+    seeking_description = db.Column(db.String(500))
 
 # TODO: implement any missing fields, as a database migration using Flask-Migrate
      # Included in the both the Venue and Artist Models
