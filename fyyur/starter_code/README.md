@@ -158,17 +158,16 @@ git push -u origin master
 
 3. **Initialize and activate a virtualenv using:**
 ```
-# Local path C:\ReSkill\Python\fyyur\starter_code
+
 python -m virtualenv env
-# cd env\Scripts
 source env/bin/activate
 ```
 >**Note** - In Windows, the `env` does not have a `bin` directory. Therefore, you'd use the analogous command shown below:
 ```
-# Local path C:\ReSkill\Python\fyyur\starter_code
+## Do this for Local Setup Local path 
+cd C:\ReSkill\Python\fyyur\starter_code
 python -m virtualenv env
-# cd env\Scripts
-source env/Scripts/activate
+cd env\Scripts
 activate.bat
 ```
 

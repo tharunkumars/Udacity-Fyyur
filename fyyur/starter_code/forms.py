@@ -3,17 +3,22 @@ from datetime import datetime
 # Update from tharun, incorporating review comments Starts
 # from flask_wtf import Form
 from flask_wtf import FlaskForm as Form
-from flask_wtf import ValidationError
-
+# from flask_wtf import ValidationError
+from wtforms.validators import ValidationError
 import re
-
 from enumsTry import enum_list_Of_Genres, enum_list_Of_States
+
 # incorporating review comments Ends
 
 from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField
 from wtforms.validators import DataRequired, AnyOf, URL
 
+from flask_moment import Moment
+from flask import Flask
 # Update from tharun, incorporating review comments Starts
+app = Flask(__name__)
+moment = Moment(app)
+
 ## moving commonly used State Data into common dictionary
 list_Of_States = [
             ('AL', 'AL'),
@@ -114,9 +119,10 @@ class VenueForm(Form):
     )
     state = SelectField(
         'state', validators=
-        [DataRequired(),
-         enum_list_Of_States.choices()],
-        #choices=list_Of_States        
+        [DataRequired()],
+         choices = list_Of_States,
+        # choices=list_Of_States   
+        # enum_list_Of_States.choices_static()     
     )
     address = StringField(
         'address', validators=[DataRequired()]
@@ -213,3 +219,42 @@ def validate(self, **kwargs):
 
 # Update from tharun, incorporating review comments Ends
 
+
+"""
+#----------------------------------------------------------------------------#
+################ old Forms maintained for reference
+#----------------------------------------------------------------------------#
+
+class VenueGetForm(FlaskForm):
+  name = StringField('Name', validators=[DataRequired()])
+  city = StringField('city', validators=[DataRequired()])
+  address = StringField('address', validators=[DataRequired()])
+  facebook_link = StringField('facebook_link', validators=[DataRequired()])
+  image_link = StringField('image_link', validators=[DataRequired()])
+  website_link = StringField('website_link', validators=[DataRequired()])
+  seeking_talent = StringField('seeking_talent', validators=[DataRequired()])
+  seeking_description = StringField('seeking_description', validators=[DataRequired()])
+  ## Update from Tharun, invoking additional Custom Validator methods   
+  phone = StringField('phone', validators=[DataRequired(),validate_phone(FlaskForm)])
+  state = StringField('state', validators=[DataRequired(),validate_state(FlaskForm)])
+  genres = StringField('genres', validators=[DataRequired(),validate_genres(FlaskForm)])
+
+class ArtistGetForm(FlaskForm):
+  name = StringField('Name', validators=[DataRequired()])
+  city = StringField('city', validators=[DataRequired()])  
+  address = StringField('address', validators=[DataRequired()])  
+  facebook_link = StringField('facebook_link', validators=[DataRequired()])
+  image_link = StringField('image_link', validators=[DataRequired()])
+  website_link = StringField('website_link', validators=[DataRequired()])
+  seeking_venue = StringField('seeking_venue', validators=[DataRequired()])
+  seeking_description = StringField('seeking_description', validators=[DataRequired()])
+  ## Update from Tharun, invoking additional Custom Validator methods   
+  phone = StringField('phone', validators=[DataRequired(),validate_phone])
+  state = StringField('state', validators=[DataRequired(),validate_state])
+  genres = StringField('genres', validators=[DataRequired(),validate_genres])
+
+class ShowGetForm(FlaskForm):
+  venue_id = StringField('venue_id', validators=[DataRequired()])
+  artist_id = StringField('artist_id', validators=[DataRequired()])
+  start_time = StringField('start_time', validators=[DataRequired()])
+"""
