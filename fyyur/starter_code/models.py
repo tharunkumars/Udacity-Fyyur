@@ -47,7 +47,7 @@ class VenueModel(db.Model):
     facebook_link = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
     website_link = db.Column(db.String(500))  
-    genres = db.ARRAY(db.String(120))
+    genres = db.ARRAY(db.String)
     #Update from Tharun to include additional fields missing from original Code  
     seeking_talent = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(500))
@@ -77,7 +77,7 @@ class ArtistModel(db.Model):
     facebook_link = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
     website_link = db.Column(db.String(500)) 
-    genres = db.ARRAY(db.String(120))
+    genres = db.ARRAY(db.String)
     #Update from Tharun to include additional fields missing from original Code
     seeking_venue = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(500))

@@ -32,7 +32,7 @@ from flask_wtf import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import select
-
+from sqlalchemy import ARRAY
 from models import *
 from forms import * 
 from flask import app
@@ -160,8 +160,19 @@ def show_venue(venue_id):
   # we get the desired results 
   # ex :  http://127.0.0.1:5000/venues/1
   print( "  venue_id   :  " , venue_id)
-  venueV = Venue.query.filter_by(id=venue_id).first()
-  return render_template('pages/show_venue.html', venue=venueV)
+  formedquery = db.session.query(VenueModel)
+  data = formedquery.filter_by( id = venue_id)
+  print( "  venue_id from DB  :  " , data[0].id)
+  print( "  venue_name from DB  :  " , data[0].name)
+  print( "  genres from DB  :  " , data[0].genres)
+  genresArray = data[0].genres
+  print( " type of array genresArray ", type(genresArray))
+
+  genresSimpleArray = genresArray.all()  
+  print( " type of array", type(genresSimpleArray))
+  for genres in genresArray:
+    print( "  genresfrom DB  :  " , genres)
+  return render_template('pages/show_venue.html', data=data)
 
 #----------------------------------------------------------------------------#
 ################  Create Venue
