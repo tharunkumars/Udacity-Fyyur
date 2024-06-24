@@ -26,14 +26,18 @@ from flask_migrate import Migrate
 import logging
 from logging import Formatter, FileHandler
 from flask_wtf import *
-#from forms import *
 
 # Update from Tharun, Incorporating Review Comments on refactoring models STARTS
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import select
-from sqlalchemy import ARRAY
-from models import *
+
+from sqlalchemy import join
+
+from models import db
+from models import Shows_Association
+from models import VenueModel
+from models import ArtistModel
+
 from forms import * 
 from flask import app
 # Update from Tharun, Incorporating Review Comments on refactoring models Ends
@@ -43,12 +47,12 @@ from flask import app
 #----------------------------------------------------------------------------#
 
 app = Flask(__name__)
+moment = Moment(app)
 app.config.from_object('config')
 
 # Update from Tharun, Incorporating Review Comments on refactoring models STARTS
 #db = SQLAlchemy(app)
 db.init_app(app)
-# moment = Moment(app)
 # Update from Tharun, Incorporating Review Comments on refactoring models Ends
 # Update from Tharun
 migrate = Migrate(app, db)
@@ -162,16 +166,6 @@ def show_venue(venue_id):
   print( "  venue_id   :  " , venue_id)
   formedquery = db.session.query(VenueModel)
   data = formedquery.filter_by( id = venue_id)
-  print( "  venue_id from DB  :  " , data[0].id)
-  print( "  venue_name from DB  :  " , data[0].name)
-  print( "  genres from DB  :  " , data[0].genres)
-  genresArray = data[0].genres
-  print( " type of array genresArray ", type(genresArray))
-
-  genresSimpleArray = genresArray.all()  
-  print( " type of array", type(genresSimpleArray))
-  for genres in genresArray:
-    print( "  genresfrom DB  :  " , genres)
   return render_template('pages/show_venue.html', data=data)
 
 #----------------------------------------------------------------------------#
@@ -188,8 +182,8 @@ def create_venue_submission():
   # TODO: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
   # updates from Tharun
-  form = VenueGetForm()  
-  objVenue = Venue()
+  form = VenueForm()  
+  objVenue = VenueModel()
   ## Update from Tharun, invoking additional Custom Validator methods via validate_on_submit methods
   form.validate_on_submit()
   form.populate_obj(objVenue)
@@ -217,21 +211,8 @@ def delete_venue(venue_id):
 #  ----------------------------------------------------------------
 @app.route('/artists')
 def artists():
-  # TODO: replace with real data returned from querying the database
-  """data=[{
-    "id": 4,
-    "name": "Guns N Petals",
-  }, {
-    "id": 5,
-    "name": "Matt Quevedo",
-  }, {
-    "id": 6,
-    "name": "The Wild Sax Band",
-  }]
-  """
-
-  formedquery = db.session.query(Artist)
-  data = formedquery.group_by(Artist.id,Artist.state).order_by(Artist.city).all()
+  formedquery = db.session.query(ArtistModel)
+  data = formedquery.group_by(ArtistModel.id,ArtistModel.state).order_by(ArtistModel.city).all()
   #data = formedquery
   #data = Venue.query.all()
   for artistV in data:
@@ -261,7 +242,7 @@ def show_artist(artist_id):
   # we get the desired results 
   # ex :  http://127.0.0.1:5000/artists/1
   print( "  artist_id   :  " , artist_id)
-  artistV = Artist.query.filter_by(id=artist_id).first()
+  artistV = ArtistModel.query.filter_by(id=artist_id).first()
   return render_template('pages/show_artist.html', artist=artistV)
 
 #  ----------------------------------------------------------------
@@ -351,8 +332,8 @@ def create_artist_submission():
   # TODO: modify data to be the data object returned from db insertion
 
   # Update from Tharun, Creation of new Artist
-  form = ArtistGetForm()  
-  objArtist = Artist()
+  form = ArtistForm()  
+  objArtist = ArtistModel()
   form.populate_obj(objArtist)
   print ( " ####### venueID ##### " + objArtist.name)
   db.session.add(objArtist)  
@@ -372,14 +353,15 @@ def create_artist_submission():
 def shows():
   # displays list of shows at /shows
   # TODO: replace with real venues data.
-
   ### Update from Tharun, Retrieving Values from DB and showing in UI
-  print("INSIDE SHOWS search")
-  formedquery = db.session.query(shows)
-  data = formedquery.group_by(shows.venue_id).all()
-  for showsV in data:
-    print("Venue Details   " + showsV.venue_id)
-  return render_template('pages/shows.html', shows=data)
+  list_of_shows = db.session.query(Shows_Association).join(VenueModel, Shows_Association.venue_id == VenueModel.id).join(ArtistModel, Shows_Association.artist_id == ArtistModel.id).all()
+  print(" list_of_shows count", len(list_of_shows))
+  for showsV in list_of_shows:
+    print("Venue id   " , showsV.asct_venue.id)
+    print("Venue Name   " , showsV.asct_venue.name)
+    print("Artist id   " , showsV.asct_artist.id)
+    print("Artist Name   " , showsV.asct_artist.name)
+  return render_template('pages/shows.html', shows=list_of_shows)
 
 @app.route('/shows/create', methods=['GET'])
 def create_shows():
@@ -399,27 +381,32 @@ def create_show_submission():
   input_Artist_id = request.form.get('artist_id')  
 
   # Retriev the records for Venue and Artist
-  venueV = db.session.query(Venue).filter_by(id=input_Venue_id).first()
-  artistV = db.session.query(Artist).filter_by(id=input_Artist_id).first()
+  venueV = db.session.query(VenueModel).filter_by(id=input_Venue_id).first()
+  artistV = db.session.query(ArtistModel).filter_by(id=input_Artist_id).first()
   #resultVenue = Venue.query.filter_by(id=input_Venue_id)
-  if venueV:
+  if venueV != None:
     print( " ####### venue Name ##### " + venueV.name)
     flash(' we have a venue named ' +  venueV.name)
   else:
      flash('No such Venue')
 
-  if artistV:
+  if artistV != None:
     print( " ####### Artist Name ##### " + artistV.name)
     flash(' we have a venue named ' +  artistV.name)
   else:
      flash('No such Artist')
 
   # Poppulate Association Table Shows
-  venueV.artists.append(artistV)
-  db.session.commit()
+  #venueV.Artist.append(artistV)
+  #db.session.commit()
 
+  new_show = Shows_Association(asct_venue=venueV, asct_artist=artistV)
+  db.session.add(new_show)
+  db.session.commit()
+  
   # on successful db insert, flash success
-  flash('Show for Artist ' + artistV.name + ' was successfully listed for venue  ' + venueV.name)
+  if ( artistV != None) and (venueV != None):
+    flash('Show for Artist ' + artistV.name + ' was successfully listed for venue  ' + venueV.name)
   # TODO: on unsuccessful db insert, flash an error instead.
   # Update from Tharun, Negative scenario unable to implement due to time constraints
   # e.g., flash('An error occurred. Show could not be listed.')
@@ -467,6 +454,7 @@ if __name__ == '__main__':
 ## Update from Tharun :: Moved the Shows Mock Data here 
 ## for better readability and for reference
 
+
 """
   data=[{
     "venue_id": 1,
@@ -508,6 +496,24 @@ if __name__ == '__main__':
 
 ## Update from Tharun :: Moved the Displays Individual Dummy Artist Data here 
 ## for better readability and for reference
+
+"""  
+  @app.route('/artists')
+  # TODO: replace with real data returned from querying the database
+
+  data=[{
+    "id": 4,
+    "name": "Guns N Petals",
+  }, {
+    "id": 5,
+    "name": "Matt Quevedo",
+  }, {
+    "id": 6,
+    "name": "The Wild Sax Band",
+  }]
+  
+"""
+
 """
 @app.route('/artists/<int:artist_id>')
 def show_artist(artist_id):

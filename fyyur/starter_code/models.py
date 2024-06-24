@@ -8,31 +8,19 @@ from flask import (
   url_for,
 )
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import join,Column, String, ForeignKey
+from sqlalchemy import join,Column, String, ForeignKey, ARRAY
            
 from sqlalchemy.orm import aliased
 from flask_moment import Moment
 
-db = SQLAlchemy()
+from flask_migrate import Migrate
 
+db = SQLAlchemy()
 
 #----------------------------------------------------------------------------#
 # Models.
 #----------------------------------------------------------------------------#
 
-# Implementing a Many2Many relationship and Creating an association 
-# table in SQLAlchemy
-"""
-Shows = db.Table('Shows',
-    db.Column('venue_id', db.Integer, db.ForeignKey('Venue.id'), primary_key=True),
-    db.Column('artist_id', db.Integer, db.ForeignKey('Artist.id'), primary_key=True)
-    )
-"""
-class Shows_Association(db.Model):
-    __tablename__ = 'Shows'
-
-    venue_id = db.Column(ForeignKey('Venue.id'),  primary_key=True)
-    artist_id = db.Column(ForeignKey('Artist.id'), primary_key=True)
 
 
 class VenueModel(db.Model):
@@ -47,7 +35,7 @@ class VenueModel(db.Model):
     facebook_link = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
     website_link = db.Column(db.String(500))  
-    genres = db.ARRAY(db.String)
+    genres = db.ARRAY(db.String(120))
     #Update from Tharun to include additional fields missing from original Code  
     seeking_talent = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(500))
@@ -73,11 +61,12 @@ class ArtistModel(db.Model):
     city = db.Column(db.String(120))
     state = db.Column(db.String(120))
     address = db.Column(db.String(120))
+    genres = db.ARRAY(db.String(120))
     phone = db.Column(db.String(120))
     facebook_link = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
     website_link = db.Column(db.String(500)) 
-    genres = db.ARRAY(db.String)
+    
     #Update from Tharun to include additional fields missing from original Code
     seeking_venue = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(500))
@@ -86,7 +75,23 @@ class ArtistModel(db.Model):
     # Shows = db.relationship('Shows',secondary=Shows,backref='Artist')
     relation_Venue = db.relationship('VenueModel',secondary='Shows',backref='Artist',viewonly=True)
     
+# Implementing a Many2Many relationship and Creating an association 
+# table in SQLAlchemy
+"""
+Shows = db.Table('Shows',
+    db.Column('venue_id', db.Integer, db.ForeignKey('Venue.id'), primary_key=True),
+    db.Column('artist_id', db.Integer, db.ForeignKey('Artist.id'), primary_key=True)
+    )
+"""
+class Shows_Association(db.Model):
+    __tablename__ = 'Shows'
 
+    venue_id = db.Column(ForeignKey('Venue.id'),  primary_key=True)
+    artist_id = db.Column(ForeignKey('Artist.id'), primary_key=True)
+
+    asct_venue = db.relationship(VenueModel, backref="Shows")
+    asct_artist = db.relationship(ArtistModel, backref="Shows")
+    
 # TODO: implement any missing fields, as a database migration using Flask-Migrate
 #Update from Tharun ,included in initial submission itself
      # Included in the both the Venue and Artist Models

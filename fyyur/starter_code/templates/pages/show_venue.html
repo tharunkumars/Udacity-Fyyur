@@ -37,11 +37,13 @@
 			<i class="fas fa-moon"></i> Not currently seeking talent
 		</p>
 		{% endif %}
-		<div class="genres">
-			{% for genre in enumerate(data[0].genres) %}
-			<span class="genre">{{ genre }}</span>
-			{% endfor %}
-		</div>
+		<!--
+		{# <div class="genres"> 						 #}
+		{#	{% for genre in enumerate(data[0].genres) %} #}
+		{#	<span class="genre">{{ genre }}</span>       #}
+		{#	{% endfor %}								 #}
+		{# </div>            							 #}
+		-->
 	</div>
 	<div class="col-sm-6">
 		<img src="{{ data[0].image_link }}" alt="Venue Image" />
