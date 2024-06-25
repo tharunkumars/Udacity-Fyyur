@@ -32,11 +32,15 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 from sqlalchemy import join
+from sqlalchemy import Update
+from sqlalchemy import MetaData
+from sqlalchemy import create_engine
 
 from models import db
 from models import Shows_Association
 from models import VenueModel
 from models import ArtistModel
+from config import SQLALCHEMY_DATABASE_URI
 
 from forms import * 
 from flask import app
@@ -103,18 +107,14 @@ def venues():
   # TODO: replace with real venues data.
   #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
   # Update from Tharun, Including Code for Venue Details Retrival from DB.
-
-  """
-    formedquery = db.session.query(Venue)
-    data = formedquery.group_by(Venue.id,Venue.state).order_by(Venue.city).all()
-
-    for venueV in data:
-      print("Venue Details   " + venueV.name)
-  """
   # Update from tharun, incorporating review comments 
   # Including logic for retrival from DB, Review Comments
-  data = VenueModel.query.all()
-  return render_template('pages/venues.html', areas=data);
+  formedquery = db.session.query(VenueModel)
+  data = formedquery.group_by(VenueModel.id,VenueModel.state).order_by(VenueModel.city).all()
+  for venueV in data:
+    print("Venue Details   " + venueV.name)
+  return render_template('pages/venues.html', venues=data);
+
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
@@ -122,22 +122,6 @@ def search_venues():
   # Ensure it is case-insensitive.
   # seach for Hop should return "The Musical Hop".
   # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
-  """
-  response={
-    "count": 1,
-    "data": [{
-      "id": 2,
-      "name": "The Dueling Pianos Bar",
-      "num_upcoming_shows": 0,
-    }]
-  }
-  # Update from Tharun, Including Code for Venue Details Retrival
-  #  from DB based on string pattern
-  
-  print ( " ####### venueID ##### " + searchTermValue)
-  formedquery = db.session.query(Venue)
-  response = formedquery.filter(Venue.name.ilike("%"+searchTermValue+"%")).all()
-  """
   # Update from tharun, incorporating review comments 
   # Including logic for retrival from DB, Review Comments
   searchTermValue =  request.form.get('search_term') 
@@ -213,10 +197,8 @@ def delete_venue(venue_id):
 def artists():
   formedquery = db.session.query(ArtistModel)
   data = formedquery.group_by(ArtistModel.id,ArtistModel.state).order_by(ArtistModel.city).all()
-  #data = formedquery
-  #data = Venue.query.all()
-  for artistV in data:
-    print("Venue Details   " + artistV.name)
+  #for artistV in data:
+   #print("Venue Details   " + artistV.name)
   return render_template('pages/artists.html', artists=data)
 
 @app.route('/artists/search', methods=['POST'])
@@ -224,15 +206,19 @@ def search_artists():
   # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
   # search for "band" should return "The Wild Sax Band".
-  response={
-    "count": 1,
-    "data": [{
-      "id": 4,
-      "name": "Guns N Petals",
-      "num_upcoming_shows": 0,
-    }]
-  }
-  return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
+  searchTermValue =  request.form.get('search_term') 
+  print ( " ####### searchTermValue ##### " + searchTermValue)
+  formedquery = db.session.query(ArtistModel)
+  data = formedquery.filter(ArtistModel.name.ilike("%"+searchTermValue+"%")).all()
+  dataCount = len(data)
+  print(" dataCount ", dataCount)
+  for artistV in data:
+    print(" inside data list ")
+    print("Artist Details name  " , artistV.name)
+    print("Artist id ", artistV.id)
+    print("Artist Details address  " , artistV.address)
+  return render_template('pages/search_artists.html', dataCount=dataCount, data=data, search_term=request.form.get('search_term', ''))
+
 
 @app.route('/artists/<int:artist_id>')
 def show_artist(artist_id):
@@ -250,34 +236,60 @@ def show_artist(artist_id):
 #  ----------------------------------------------------------------
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
-  form = ArtistForm()
-  artist={
-    "id": 4,
-    "name": "Guns N Petals",
-    "genres": ["Rock n Roll"],
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "326-123-5000",
-    "website": "https://www.gunsnpetalsband.com",
-    "facebook_link": "https://www.facebook.com/GunsNPetals",
-    "seeking_venue": True,
-    "seeking_description": "Looking for shows to perform at in the San Francisco Bay Area!",
-    "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80"
-  }
+  
   # TODO: populate form with fields from artist with ID <artist_id>
   # Update from Tharun, Could not find time update single artist, though the logic is same
-  # retrieve the Artist from DB based on the id from form 
-  # update with new values
-  return render_template('forms/edit_artist.html', form=form, artist=artist)
+  # retrieve the Artist from DB based on the id from 
+  print( "  artist_id   :  " , artist_id)
+  artistV = ArtistModel.query.filter_by(id=artist_id).first()
+  form = ArtistForm(obj=artistV)
+  return render_template('forms/edit_artist.html', form=form,artist=artistV)
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
   # TODO: take values from the form submitted, and update existing
   # artist record with ID <artist_id> using the new attributes
 
-  # Update from Tharun, Could not find time update single artist, though the logic is same
-  # retrieve the Artist from DB based on the id from form 
-  # update with new values
+  # updates from Tharun
+  objArtistform = ArtistForm()  
+  objArtist = ArtistModel()
+
+  # Trial 1
+  # engine = create_engine(SQLALCHEMY_DATABASE_URI)
+  # Objmetadata = MetaData()
+  # Objmetadata.reflect(engine, schema='public')
+  # print(f"Reflected Tables: {Objmetadata.tables}")
+  # artist_table = Objmetadata.tables['public.Artist']
+  # toUpdateArtist = objArtist.query.get(artist_id)
+  
+  objArtistform.populate_obj(objArtist)
+  artist_table = ArtistModel.__table__
+  update_data = {}
+  for attr, value in objArtist.__dict__.items():
+        if not attr.startswith('_sa_'):
+          update_data[attr] = value 
+          print( " attr name " , attr )
+          print( " Value " , value )       
+  update_stmt = Update(artist_table).where(ArtistModel.id == artist_id).values(**update_data)
+  print(" ### Update Stmt ### " , update_stmt)
+   
+  result = db.session.execute(update_stmt)
+  print("\n ### Update Stmt result count ### " , result.rowcount)
+  
+  ## Update from Tharun, invoking additional Custom Validator methods via validate_on_submit methods
+  """
+  objArtistform.validate_on_submit()
+  print ( " ####### Validation Complete ##### " )
+  objArtistform.populate_obj(objArtist)
+  print ( " ####### Populate Complete ##### " )  
+  print ( " ####### Artist Name ##### " , objArtist.name)
+  db.session.add(objArtist)
+  """
+  # db.session.flush()
+  db.session.commit()
+  # db.session.close()
+  # on successful db insert, flash success
+  flash('Artist ' + request.form['name'] + ' was successfully Updated!  ')
   return redirect(url_for('show_artist', artist_id=artist_id))
 
 #  ----------------------------------------------------------------
@@ -594,6 +606,25 @@ def show_artist(artist_id):
   }
   data = list(filter(lambda d: d['id'] == artist_id, [data1, data2, data3]))[0]
   
+"""
+
+"""
+@app.route('/artists/<int:artist_id>/edit'
+
+  artist={
+    "id": 4,
+    "name": "Guns N Petals",
+    "genres": ["Rock n Roll"],
+    "city": "San Francisco",
+    "state": "CA",
+    "phone": "326-123-5000",
+    "website": "https://www.gunsnpetalsband.com",
+    "facebook_link": "https://www.facebook.com/GunsNPetals",
+    "seeking_venue": True,
+    "seeking_description": "Looking for shows to perform at in the San Francisco Bay Area!",
+    "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80"
+  }
+
 """
 ## Update from Tharun :: Moved the Dummy Data for Venue
 ## for better readability and for reference

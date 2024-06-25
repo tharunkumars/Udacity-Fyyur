@@ -169,7 +169,7 @@ class ArtistForm(Form):
         'image_link'
     )
     genres = SelectMultipleField(
-        'genres', validators=[DataRequired()],
+        'genres', validators=[],
         choices=list_Of_Genres 
      )
     facebook_link = StringField(
