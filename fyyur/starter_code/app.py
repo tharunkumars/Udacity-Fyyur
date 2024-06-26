@@ -298,34 +298,45 @@ def edit_artist_submission(artist_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
-  form = VenueForm()
-  venue={
-    "id": 1,
-    "name": "The Musical Hop",
-    "genres": ["Jazz", "Reggae", "Swing", "Classical", "Folk"],
-    "address": "1015 Folsom Street",
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "123-123-1234",
-    "website": "https://www.themusicalhop.com",
-    "facebook_link": "https://www.facebook.com/TheMusicalHop",
-    "seeking_talent": True,
-    "seeking_description": "We are on the lookout for a local artist to play every two weeks. Please call us.",
-    "image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60"
-  }
+  
   # TODO: populate form with values from venue with ID <venue_id>
   # Update from Tharun, Could not find time update single venue, though the logic is same
   # retrieve the venue from DB based on the id from form 
   # update with new values
-  return render_template('forms/edit_venue.html', form=form, venue=venue)
+  print( "  venue_id   :  " , venue_id)
+  venueV = VenueModel.query.filter_by(id=venue_id).first()
+  form = VenueForm(obj=venueV)
+  return render_template('forms/edit_venue.html', form=form, venue=venueV)
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
   # TODO: take values from the form submitted, and update existing
   # venue record with ID <venue_id> using the new attributes
-  # Update from Tharun, Could not find time update single venue, though the logic is same
+  # Update from Tharun, update single venue, though the logic is same
   # retrieve the venue from DB based on the id from form 
   # update with new values
+
+  objVenueForm = VenueForm()  
+  objVenueModel = VenueModel()
+
+  objVenueForm.populate_obj(objVenueModel)
+  venue_table = VenueModel.__table__
+  update_data = {}
+  for attr, value in objVenueModel.__dict__.items():
+        if not attr.startswith('_sa_'):
+          update_data[attr] = value 
+          print( " attr name " , attr )
+          print( " Value " , value )       
+  update_stmt = Update(venue_table).where(VenueModel.id == venue_id).values(**update_data)
+  print(" ### Update Stmt ### " , update_stmt)
+   
+  result = db.session.execute(update_stmt)
+  print("\n ### Update Stmt result count ### " , result.rowcount)
+  
+  db.session.commit()
+
+  # on successful db insert, flash success
+  flash('Venue ' + request.form['name'] + ' was successfully Updated!  ')
   return redirect(url_for('show_venue', venue_id=venue_id))
 
 #  ----------------------------------------------------------------
@@ -740,6 +751,23 @@ data1={
     "upcoming_shows_count": 1,
   }
   data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
+
+  @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
+
+    venue={
+    "id": 1,
+    "name": "The Musical Hop",
+    "genres": ["Jazz", "Reggae", "Swing", "Classical", "Folk"],
+    "address": "1015 Folsom Street",
+    "city": "San Francisco",
+    "state": "CA",
+    "phone": "123-123-1234",
+    "website": "https://www.themusicalhop.com",
+    "facebook_link": "https://www.facebook.com/TheMusicalHop",
+    "seeking_talent": True,
+    "seeking_description": "We are on the lookout for a local artist to play every two weeks. Please call us.",
+    "image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60"
+  }
 """
 ## Update from Tharun :: Moved the BootStrap Data Creation for Venue and Artist here 
 ## for better readability and for reference

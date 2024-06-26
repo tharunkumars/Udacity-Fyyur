@@ -37,3 +37,12 @@ FROM "Venue" GROUP BY "Venue".state ORDER BY "Venue".city]
 (Background on this error at: https://sqlalche.me/e/20/f405)
 
 http://127.0.0.1:5000/venues/7
+
+SELECT * FROM public."Artist"
+ORDER BY id ASC 
+
+SELECT * FROM public."Venue"
+ORDER BY id ASC 
+
+SELECT * FROM public."Shows"
+ORDER BY id ASC 
